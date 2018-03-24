@@ -2,7 +2,7 @@ This template is a windows-x64 instance of electron set up with the phaser game 
 
 All files for the application can be found in `/resources/app/`. This is where all application code and resources should be placed. The initial stage is defined in `start.js`' 
 
-Application can be run by executing `electron.exe`.
+Application can be run by executing `electron.exe`. By default, alt-f4 will be the only way to close the application.
 
 Things that can be changed:
 
