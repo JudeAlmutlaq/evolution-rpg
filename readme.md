@@ -1,13 +1,25 @@
-This template is a windows-x64 instance of electron set up with the phaser game framework. The application will start fullscreen, with the phaser canvas stretched to the largest it can be while maintaining ratio.
+# Electron-Phaser
 
-All files for the application can be found in `/resources/app/`. This is where all application code and resources should be placed. The initial stage is defined in `start.js`' 
+## The Application
 
-Application can be run by executing `electron.exe`. By default, alt-f4 will be the only way to close the application.
+This template is a windows-x64 instance of electron set up with the Phaser 2 game framework. The application will start fullscreen, with the phaser canvas stretched to the largest it can be while maintaining the canvas ratio.
 
-Things that can be changed:
+The application can be run by executing `electron.exe`. By default, alt-f4 will be the only way to close the application. `electron.exe` can be renamed as desired.
 
-0. The window background color can be found on line 2 of main.scss
-0. The canvas background color can be found on line 15 of start.js
-0. The dev tools start open. This is defined on line 22 of main.js
-0. The canvas resolution is defined on line 16 on index.html
-0. `electron.exe` can be renamed without causing problems
+All files for the application can be found in `/resources/app/`. This is where all application code and resources should be placed. The rest of the files are part of the Electron framework and should not be altered.
+
+## Phaser
+
+Phaser states are defined in the `states` directory. Every .js file in that directory will be automatically loaded and added as a 'state' to the phaser system. The state name will be the filename (without the `.js`). The initial stage is defined in `states/Main.js`'.
+
+A stage can be loaded using the following Phaser method: 
+
+    game.state.start('StageName');
+
+`game` is defined as a global variable, and will be accessible in all application files. `game` is an instance of `Phaser.Game` and can be used to access all Phaser attributes and methods. 
+
+## Settings
+
+Initial setting for the application can be found in `settings.js`. A global variable named `electronPhaserSettings` will be declared with all of the settings in that file. Additional settings or variable you want to access globally can be added to the `settings.js` file, or added dynamically during runtime.
+
+ 
