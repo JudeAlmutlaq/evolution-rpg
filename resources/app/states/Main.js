@@ -55,6 +55,7 @@ class State {
 function toTown() {
 
     game.state.start('Town');
+    music.stop();
 
 }
 

@@ -14,6 +14,7 @@ var doorSprite;
 var layer0;
 var layer1;
 var layer2;
+var music;
 
 
 class State {
@@ -31,9 +32,14 @@ class State {
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 12);
         game.load.image('doorSprite', 'images/doorSprite.png');
+
+        game.load.audio('townMusic', ['audio/townMusic.ogg']);
     };
 
     create() {
+
+        music = game.add.audio('townMusic');
+        music.play();
 
         //  The 'towm' key here is the Loader key given in game.load.tilemap
         town = game.add.tilemap('town');
