@@ -32,33 +32,39 @@
     let startup = require('./js/startupStage').startup;
     game.state.add('Startup', startup);
 
-    fs.readdir('./resources/app/states/', function(err, items) {
-        for(let filePath of items) {
-            let filenameSplit = filePath.split(".");
+    loadStates();
 
-            let fileType = filenameSplit[1];
-            if (fileType === 'js') {
-                let stateName = filenameSplit[0];
-                let state = require('./states/' + stateName).state;
-                game.state.add(stateName, state);
+    function loadStates() {
+        fs.readdir('./resources/app/states/', function(err, items) {
+            for(let filePath of items) {
+                let filenameSplit = filePath.split(".");
+
+                let fileType = filenameSplit[1];
+                if (fileType === 'js') {
+                    let stateName = filenameSplit[0];
+                    let state = require('./states/' + stateName).state;
+                    game.state.add(stateName, state);
+                }
             }
-        }
 
-        game.state.start('Startup');
-    });
+            loadCustomScripts();
+        });
+    }
 
-    fs.readdir('./resources/app/customScripts/', function(err, items) {
-        for(let filePath of items) {
-            let filenameSplit = filePath.split(".");
+    function loadCustomScripts() {
+        fs.readdir('./resources/app/customScripts/', function(err, items) {
+            for(let filePath of items) {
+                let filenameSplit = filePath.split(".");
 
-            let fileType = filenameSplit[1];
-            if (fileType === 'js') {
-                $.getScript('customScripts/'+filePath);
+                let fileType = filenameSplit[1];
+                if (fileType === 'js') {
+                    $.getScript('customScripts/'+filePath);
+                }
             }
-        }
 
-        game.state.start('Startup');
-    });
+            game.state.start('Startup');
+        });
+    }
 </script>
 
 </body>
