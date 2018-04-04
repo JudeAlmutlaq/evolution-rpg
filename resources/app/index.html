@@ -32,7 +32,22 @@
     let startup = require('./js/startupStage').startup;
     game.state.add('Startup', startup);
 
-    loadStates();
+    loadCustomScripts();
+
+    function loadCustomScripts() {
+        fs.readdir('./resources/app/customScripts/', function(err, items) {
+            for(let filePath of items) {
+                let filenameSplit = filePath.split(".");
+
+                let fileType = filenameSplit[1];
+                if (fileType === 'js') {
+                    $.getScript('customScripts/'+filePath);
+                }
+            }
+
+            loadStates();
+        });
+    }
 
     function loadStates() {
         fs.readdir('./resources/app/states/', function(err, items) {
@@ -44,21 +59,6 @@
                     let stateName = filenameSplit[0];
                     let state = require('./states/' + stateName).state;
                     game.state.add(stateName, state);
-                }
-            }
-
-            loadCustomScripts();
-        });
-    }
-
-    function loadCustomScripts() {
-        fs.readdir('./resources/app/customScripts/', function(err, items) {
-            for(let filePath of items) {
-                let filenameSplit = filePath.split(".");
-
-                let fileType = filenameSplit[1];
-                if (fileType === 'js') {
-                    $.getScript('customScripts/'+filePath);
                 }
             }
 
