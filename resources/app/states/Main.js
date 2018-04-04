@@ -2,6 +2,7 @@ var text;
 var style;
 var button;
 var jungle;
+var music;
 
 
 class State {
@@ -9,9 +10,13 @@ class State {
     preload() {
         game.load.image('jungle_1', 'images/backgrounds/Jungle_1.png');
         game.load.image('button', 'images/button.png');
+        game.load.audio('openingMusic', ['audio/openingMusic.ogg']);
     };
 
     create() {
+
+        music = game.add.audio('openingMusic');
+        music.play();
 
         game.stage.backgroundColor = "#0d2b00";
 

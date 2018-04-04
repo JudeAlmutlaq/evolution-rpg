@@ -31,7 +31,6 @@ class State {
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 12);
         game.load.image('doorSprite', 'images/doorSprite.png');
-
     };
 
     create() {
@@ -63,7 +62,7 @@ class State {
 
         jude.body.setCollisionGroup(judeCollisionGroup);
 
-        jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
+        jude.body.collides(wallsCollisionGroup);
 
         //jude.body.collides(doorCollisionGroup);
 
@@ -74,7 +73,9 @@ class State {
         right = jude.animations.add('right', [6, 7, 8], 10, true);
         up = jude.animations.add('up', [9, 10, 11], 10, true);
 
-        //doorAnim = door.animations.add('doorAnim', [0,1,2,3,4,5,6,7,8,9,10,11], 5, true);
+        door = game.add.sprite(0,0, 'door');
+        door.alpha = 0;
+        doorAnim = door.animations.add('doorAnim', [0,1,2,3,4,5,6,7,8,9,10,11], 5, true);
 
         cursors = game.input.keyboard.createCursorKeys();
 
@@ -144,17 +145,29 @@ class State {
                 redWall.body.collides(judeCollisionGroup);
 
             }
-            //else if (data [i] == 2){
-                //doorSprite = game.add.sprite(x*32, y*32, 'doorSprite');
-                //game.physics.p2.enable('doorSprite');
+            else if (data [i] == 2){
+                doorSprite = game.add.sprite(x*32, y*32, 'doorSprite');
+                game.physics.p2.enable('doorSprite');
                 //doorSprite.body.static = true;
 
-                //doorSprite.anchor.setTo(0.5);
+                doorSprite.anchor.setTo(0.5);
 
                 //doorSprite.body.setCollisionGroup(doorCollisionGroup);
                 //doorSprite.body.collides(judeCollisionGroup);
 
-           //}
+           }
+           if (data [i] == 3){
+               var redWall = game.add.sprite(x*32, y*32, 'redWall');
+               game.physics.p2.enable(redWall);
+               redWall.body.static = true;
+
+               redWall.anchor.setTo(0.5);
+
+               redWall.body.setCollisionGroup(wallsCollisionGroup);
+               redWall.body.collides(judeCollisionGroup);
+
+           }
+
 
         }
     }
