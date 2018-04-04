@@ -1,0 +1,1 @@
+Any `.js` file placed in this folder will be included. Functions, variables and classes defined in these files will be placed in the global namespace.
