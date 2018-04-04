@@ -6,45 +6,66 @@
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="js/phaser-2.10.3.js"></script>
+    <script type="text/javascript" src="js/utilities.js"></script>
     <script>if (window.module) module = window.module;</script>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
 <script type="text/javascript">
-    var electronPhaserSettings = require('./settings');
+    var world = {};
+    world.electronPhaserSettings = require('./settings');
 
     let screenResolution = [$(window).width(), $(window).height()];
     if (screenResolution[0]/screenResolution[1] === 16/9) {
-        electronPhaserSettings.canvasResolution = electronPhaserSettings.canvasResolution_16x9;
+        world.electronPhaserSettings.canvasResolution = world.electronPhaserSettings.canvasResolution_16x9;
     } else if (screenResolution[0]/screenResolution[1] === 4/3) {
-        electronPhaserSettings.canvasResolution = electronPhaserSettings.canvasResolution_4x3;
+        world.electronPhaserSettings.canvasResolution = world.electronPhaserSettings.canvasResolution_4x3;
     } else {
-        electronPhaserSettings.canvasResolution = electronPhaserSettings.canvasResolution_other;
+        world.electronPhaserSettings.canvasResolution = world.electronPhaserSettings.canvasResolution_other;
     }
 
-    var game = new Phaser.Game(electronPhaserSettings.canvasResolution[0], electronPhaserSettings.canvasResolution[1], Phaser.AUTO);
+    var game = new Phaser.Game(world.electronPhaserSettings.canvasResolution[0], world.electronPhaserSettings.canvasResolution[1], Phaser.AUTO);
 
     let fs = require('fs');
 
-    $('body').css('backgroundColor', electronPhaserSettings.windowBackgroundColor);
+    $('body').css('backgroundColor', world.electronPhaserSettings.windowBackgroundColor);
     let startup = require('./js/startupStage').startup;
     game.state.add('Startup', startup);
 
-    fs.readdir('./resources/app/states/', function(err, items) {
-        for(let filePath of items) {
-            let filenameSplit = filePath.split(".");
+    loadCustomScripts();
 
-            let fileType = filenameSplit[1];
-            if (fileType === 'js') {
-                let stateName = filenameSplit[0];
-                let state = require('./states/' + stateName).state;
-                game.state.add(stateName, state);
+    function loadCustomScripts() {
+        fs.readdir('./resources/app/customScripts/', function(err, items) {
+            for(let filePath of items) {
+                let filenameSplit = filePath.split(".");
+
+                let fileType = filenameSplit[1];
+                if (fileType === 'js') {
+                    $.getScript('customScripts/'+filePath);
+                }
             }
-        }
 
-        game.state.start('Startup');
-    });
+            loadStates();
+        });
+    }
+
+    function loadStates() {
+        fs.readdir('./resources/app/states/', function(err, items) {
+            for(let filePath of items) {
+                let filenameSplit = filePath.split(".");
+
+                let fileType = filenameSplit[1];
+                if (fileType === 'js') {
+                    let stateName = filenameSplit[0];
+                    let state = require('./states/' + stateName).state;
+                    game.state.add(stateName, state);
+                }
+            }
+
+            game.state.start('Startup');
+        });
+    }
 </script>
 
 </body>

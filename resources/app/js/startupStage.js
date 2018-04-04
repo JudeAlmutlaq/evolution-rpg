@@ -5,7 +5,8 @@ class Startup {
     };
 
     fullScreenSetup() {
-        game.stage.backgroundColor = electronPhaserSettings.canvasBackgroundColor;
+        console.log(world);
+        game.stage.backgroundColor = world.electronPhaserSettings.canvasBackgroundColor;
 
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;

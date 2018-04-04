@@ -16,10 +16,16 @@ A stage can be loaded using the following Phaser method:
 
     game.state.start('StageName');
 
-`game` is defined as a global variable, and will be accessible in all application files. `game` is an instance of `Phaser.Game` and can be used to access all Phaser attributes and methods. 
+`game` is defined as a world variable, and will be accessible in all application files. `game` is an instance of `Phaser.Game` and can be used to access all Phaser attributes and methods. 
 
-## Settings
+## Global variables and Settings
 
-Initial setting for the application can be found in `settings.js`. A global variable named `electronPhaserSettings` will be declared with all of the settings in that file. Additional settings or variable you want to access globally can be added to the `settings.js` file, or added dynamically during runtime.
+There will be a global variable defined called `world`. Properties inside the `world` variable will be accessible from anywhere. You may place your own data inside `world` if you want to keep the data across states. Initial setting for the application can be found in `settings.js`. Settings are accessable inside the world variable at `world.electronPhaserSettings` will be declared with all of the settings in that file. Additional settings or variable you want to access worldly can be added to the `settings.js` file.
 
- 
+## Custom scripts folder
+
+There is a folder `/resources/app/customSctripts`. Any `.js` file placed in this folder will be included. Functions, variables and classes defined in these files will be placed in the global namespace.
+
+## Additional functions
+
+`/resources/app/js/utilities.js` contains other functions that could be of use. `closeWindow` will close the app down.
