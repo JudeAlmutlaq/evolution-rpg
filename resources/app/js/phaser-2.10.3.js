@@ -7605,7 +7605,7 @@ module.exports = Body;
 
 /**
  * A rigid body. Has got a center of mass, position, velocity and a number of
- * shapes that are used for collisions.
+ * shapes that are used for walls.
  *
  * @class Body
  * @constructor
@@ -7865,8 +7865,8 @@ function Body(options){
      * The type of motion this body has. Should be one of: {{#crossLink "Body/STATIC:property"}}Body.STATIC{{/crossLink}}, {{#crossLink "Body/DYNAMIC:property"}}Body.DYNAMIC{{/crossLink}} and {{#crossLink "Body/KINEMATIC:property"}}Body.KINEMATIC{{/crossLink}}.
      *
      * * Static bodies do not move, and they do not respond to forces or collision.
-     * * Dynamic bodies body can move and respond to collisions and forces.
-     * * Kinematic bodies only moves according to its .velocity, and does not respond to collisions or force.
+     * * Dynamic bodies body can move and respond to walls and forces.
+     * * Kinematic bodies only moves according to its .velocity, and does not respond to walls or force.
      *
      * @property type
      * @type {number}
@@ -8525,7 +8525,7 @@ Body.prototype.applyDamping = function(dt){
 };
 
 /**
- * Wake the body up. Normally you should not need this, as the body is automatically awoken at events such as collisions.
+ * Wake the body up. Normally you should not need this, as the body is automatically awoken at events such as walls.
  * Sets the sleepState to {{#crossLink "Body/AWAKE:property"}}Body.AWAKE{{/crossLink}} and emits the wakeUp event if the body wasn't awake before.
  * @method wakeUp
  */
@@ -10865,7 +10865,7 @@ function Shape(options){
     this.collisionMask = options.collisionMask !== undefined ? options.collisionMask : 1;
 
     /**
-     * Material to use in collisions for this Shape. If this is set to null, the world will use default material properties instead.
+     * Material to use in walls for this Shape. If this is set to null, the world will use default material properties instead.
      * @property material
      * @type {Material}
      */
@@ -12664,7 +12664,7 @@ function World(options){
     /**
      * Fired after the Broadphase has collected collision pairs in the world.
      * Inside the event handler, you can modify the pairs array as you like, to
-     * prevent collisions between objects that you don't want.
+     * prevent walls between objects that you don't want.
      * @event postBroadphase
      * @param {Array} pairs An array of collision pairs. If this array is [body1,body2,body3,body4], then the body pairs 1,2 and 3,4 would advance to narrowphase.
      */
@@ -13417,7 +13417,7 @@ World.prototype.disableBodyCollision = function(bodyA,bodyB){
 };
 
 /**
- * Enable collisions between the given two bodies
+ * Enable walls between the given two bodies
  * @method enableBodyCollision
  * @param {Body} bodyA
  * @param {Body} bodyB
@@ -39326,7 +39326,7 @@ Phaser.Pointer = function (game, id, pointerMode) {
     this.type = Phaser.POINTER;
 
     /**
-    * @property {boolean} exists - A Pointer object that exists is allowed to be checked for physics collisions and overlaps.
+    * @property {boolean} exists - A Pointer object that exists is allowed to be checked for physics walls and overlaps.
     * @default
     */
     this.exists = true;
@@ -89172,7 +89172,7 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Checks for collision between two game objects and separates them if colliding ({@link https://gist.github.com/samme/cbb81dd19f564dcfe2232761e575063d details}). If you don't require separation then use {@link #overlap} instead.
     *
-    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer walls.
     * Both the `object1` and `object2` can be arrays of objects, of differing types.
     *
     * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
@@ -91441,7 +91441,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.blocked = { none: true, up: false, down: false, left: false, right: false };
 
     /**
-    * If this is an especially small or fast moving object then it can sometimes skip over tilemap collisions if it moves through a tile in a step.
+    * If this is an especially small or fast moving object then it can sometimes skip over tilemap walls if it moves through a tile in a step.
     * Set this padding value to add extra padding to its bounds. tilePadding.x applied to its width, y to its height.
     * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprite's dimensions when checking for tile collision.
     */
@@ -95476,8 +95476,8 @@ Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "my", {
 
 /**
 * The Physics Body is typically linked to a single Sprite and defines properties that determine how the physics body is simulated.
-* These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene.
-* In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
+* These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to walls in the scene.
+* In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and walls in the scene.
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
 * Note: When bound to a Sprite to avoid single-pixel jitters on mobile devices we strongly recommend using Sprite sizes that are even on both axis, i.e. 128x128 not 127x127.
 * Note: When a game object is given a P2 body it has its anchor x/y set to 0.5, so it becomes centered.
@@ -96970,7 +96970,7 @@ Phaser.Physics.P2.Body.prototype = {
 Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 
 /**
- * Dynamic body. Dynamic bodies body can move and respond to collisions and forces.
+ * Dynamic body. Dynamic bodies body can move and respond to walls and forces.
  * @property DYNAMIC
  * @type {Number}
  * @static
@@ -96986,7 +96986,7 @@ Phaser.Physics.P2.Body.DYNAMIC = 1;
 Phaser.Physics.P2.Body.STATIC = 2;
 
 /**
- * Kinematic body. Kinematic bodies only moves according to its .velocity, and does not respond to collisions or force.
+ * Kinematic body. Kinematic bodies only moves according to its .velocity, and does not respond to walls or force.
  * @property KINEMATIC
  * @type {Number}
  * @static
@@ -97278,7 +97278,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 
 /**
 * @name Phaser.Physics.P2.Body#motionState
-* @property {number} motionState - The type of motion this body has. Should be one of: Body.STATIC (the body does not move), Body.DYNAMIC (body can move and respond to collisions) and Body.KINEMATIC (only moves according to its .velocity).
+* @property {number} motionState - The type of motion this body has. Should be one of: Body.STATIC (the body does not move), Body.DYNAMIC (body can move and respond to walls) and Body.KINEMATIC (only moves according to its .velocity).
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 
@@ -101178,7 +101178,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
         // Collision width/height (pixels)
         // What purpose do these have? Most things use tile width/height directly.
-        // This also only extends collisions right and down.       
+        // This also only extends walls right and down.
         cw: tilemap.tileWidth,
         ch: tilemap.tileHeight,
 
@@ -102548,7 +102548,7 @@ Phaser.TilemapParser = {
     * @param {object} objectGroup - A JSON object group.
     * @param {object} objectsCollection - An object into which new array of Tiled map objects will be added.
     * @param {object} collisionCollection - An object into which new array of collision objects will be added. Currently only polylines are added.
-    * @param {string} [nameKey=objectGroup.name] - Key under which to store objects in collisions in objectsCollection and collisionCollection
+    * @param {string} [nameKey=objectGroup.name] - Key under which to store objects in walls in objectsCollection and collisionCollection
     * @param {object} [relativePosition={x: 0, y: 0}] - Coordinates the object group's position is relative to.
     * @return {object} A object literal containing the objectsCollection and collisionCollection
     */
@@ -103116,7 +103116,7 @@ Phaser.TilemapParser = {
                     var objectGroup = tilesetGroupObjects[tile.index];
                     if (objectGroup)
                     {
-                        // build collisions and objects for objectgroups found in the tileset's tiles
+                        // build walls and objects for objectgroups found in the tileset's tiles
                         this.parseObjectGroup(
                             objectGroup,
                             map.objects,
