@@ -25,3 +25,7 @@ There will be a global variable defined called `world`. Properties inside the `w
 ## Custom scripts folder
 
 There is a folder `/resources/app/customSctripts`. Any `.js` file placed in this folder will be included. Functions, variables and classes defined in these files will be placed in the global namespace.
+
+## Additional functions
+
+`/resources/app/js/utilities.js` contains other functions that could be of use. `closeWindow` will close the app down.
