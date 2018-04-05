@@ -15,6 +15,11 @@ var layer0;
 var layer1;
 var layer2;
 var music;
+var doorTransition = [
+    { x:37, y:37, state:'PlantShop'},
+    { x:20, y:29, state:'Inn'},
+
+];
 
 
 class State {
@@ -57,6 +62,7 @@ class State {
         layer2.resizeWorld();
 
         game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.p2.setImpactEvents(true);
 
         judeCollisionGroup = game.physics.p2.createCollisionGroup();
         wallsCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -68,7 +74,7 @@ class State {
 
         jude.body.setCollisionGroup(judeCollisionGroup);
 
-        jude.body.collides(wallsCollisionGroup);
+        jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
 
         //jude.body.collides(doorCollisionGroup);
 
@@ -135,10 +141,11 @@ class State {
     };
 
     setUpRed() {
-        fs.readFile('./resources/app/images/GLtown.json', this.jsonData);
+        var jsonData = fs.readFileSync('./resources/app/images/GLtown.json');
+        this.jsonData(jsonData);
     }
 
-    jsonData(error, jsondata) {
+    jsonData(jsondata) {
         var mapInfo = JSON.parse(jsondata);
         console.log(mapInfo);
 
@@ -153,7 +160,7 @@ class State {
             var y = i / width;
             y = Math.floor(y);
 
-            if (data [i] == 1) {
+            if (data [i] === 1) {
 
                 var redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
                 game.physics.p2.enable(redWall);
@@ -164,24 +171,27 @@ class State {
                 redWall.body.setCollisionGroup(wallsCollisionGroup);
                 redWall.body.collides(judeCollisionGroup);
 
-            }
-            else if (data [i] == 2) {
-                doorSprite = game.add.sprite(x * 32, y * 32, 'doorSprite');
-                game.physics.p2.enable('doorSprite');
-                //doorSprite.body.static = true;
+            } else if (data [i] === 2) {
+                doorSprite = game.add.sprite(x * 32+16, y * 32+16, 'doorSprite');
+                game.physics.p2.enable(doorSprite);
+                doorSprite.body.static = true;
 
-                //doorSprite.anchor.setTo(0.5);
+                doorSprite.body.doorX = x;
+                doorSprite.body.doorY = y;
 
-                //doorSprite.body.setCollisionGroup(doorCollisionGroup);
-                //doorSprite.body.collides(judeCollisionGroup);
+                doorSprite.anchor.setTo(0.5);
+                doorSprite.body.setCollisionGroup(doorCollisionGroup);
 
-            }
-            if (data [i] == 3) {
-                var redWall = game.add.sprite(x * 32, y * 32, 'redWall');
+                doorSprite.body.collides(judeCollisionGroup, openDoor, this);
+
+                console.log(x,y);
+
+            } else if (data [i] === 3) {
+                var redWall = game.add.sprite(x * 32+16, y * 32+16, 'redWall');
                 game.physics.p2.enable(redWall);
                 redWall.body.static = true;
 
-                //redWall.anchor.setTo(0.5);
+                redWall.anchor.setTo(0.5);
 
                 redWall.body.setCollisionGroup(wallsCollisionGroup);
                 redWall.body.collides(judeCollisionGroup);
@@ -189,6 +199,19 @@ class State {
             }
 
 
+        }
+
+    }
+
+
+}
+
+function openDoor (doorBody, judeBody) {
+
+    for (var i in doorTransition){
+        var transition = doorTransition[i];
+        if (transition.x === doorBody.doorX && transition.y === doorBody.doorY){
+            game.state.start(transition.state);
         }
     }
 
