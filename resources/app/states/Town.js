@@ -39,7 +39,7 @@ class State {
     create() {
 
         music = game.add.audio('townMusic');
-        music.play();
+        //music.play();
 
         //  The 'towm' key here is the Loader key given in game.load.tilemap
         town = game.add.tilemap('town');
@@ -141,7 +141,7 @@ class State {
 
             if (data [i] == 1){
 
-                var redWall = game.add.sprite(x*32, y*32, 'redWall');
+                var redWall = game.add.sprite(x*32+16, y*32+16, 'redWall');
                 game.physics.p2.enable(redWall);
                 redWall.body.static = true;
 
@@ -156,7 +156,7 @@ class State {
                 game.physics.p2.enable('doorSprite');
                 //doorSprite.body.static = true;
 
-                doorSprite.anchor.setTo(0.5);
+                //doorSprite.anchor.setTo(0.5);
 
                 //doorSprite.body.setCollisionGroup(doorCollisionGroup);
                 //doorSprite.body.collides(judeCollisionGroup);
@@ -167,7 +167,7 @@ class State {
                game.physics.p2.enable(redWall);
                redWall.body.static = true;
 
-               redWall.anchor.setTo(0.5);
+               //redWall.anchor.setTo(0.5);
 
                redWall.body.setCollisionGroup(wallsCollisionGroup);
                redWall.body.collides(judeCollisionGroup);

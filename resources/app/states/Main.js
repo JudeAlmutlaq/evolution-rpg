@@ -16,7 +16,7 @@ class State {
     create() {
 
         music = game.add.audio('openingMusic');
-        music.play();
+        //music.play();
 
         game.stage.backgroundColor = "#0d2b00";
 
