@@ -28,7 +28,7 @@ class State {
         game.load.tilemap('town', 'images/GLtown.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('townTiles', 'images/GLtowntiles.png');
 
-        game.load.image('redWall', 'images/RED.png' );
+        game.load.image('redWall', 'images/RED.png');
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 12);
         game.load.image('doorSprite', 'images/doorSprite.png');
@@ -79,9 +79,9 @@ class State {
         right = jude.animations.add('right', [6, 7, 8], 10, true);
         up = jude.animations.add('up', [9, 10, 11], 10, true);
 
-        door = game.add.sprite(0,0, 'door');
+        door = game.add.sprite(0, 0, 'door');
         door.alpha = 0;
-        doorAnim = door.animations.add('doorAnim', [0,1,2,3,4,5,6,7,8,9,10,11], 5, true);
+        doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
         cursors = game.input.keyboard.createCursorKeys();
 
@@ -95,35 +95,50 @@ class State {
 
         jude.body.setZeroVelocity();
 
-        if (cursors.left.isDown)
-        {
-            jude.body.velocity.x = -150;
-            jude.animations.play('left');
+        var xDir = 0;
+        var yDir = 0;
+        var speed = 0;
+
+        if (cursors.up.isDown) {
+            yDir--;
         }
-        else if (cursors.right.isDown)
-        {
-            jude.body.velocity.x = 150;
+        if (cursors.down.isDown) {
+            yDir++;
+        }
+        if (cursors.left.isDown) {
+            xDir--;
+        }
+        if (cursors.right.isDown) {
+            xDir++;
+        }
+        if (xDir && yDir){
+            speed = 106;
+        } else {
+            speed = 150;
+        }
+        jude.body.velocity.x = xDir*speed;
+        jude.body.velocity.y = yDir*speed;
+        if (yDir === -1){
+            jude.animations.play('up');
+        } else if (yDir === 1){
+            jude.animations.play('down');
+        } else if (xDir === -1){
+            jude.animations.play('left');
+        }else if (xDir === 1){
             jude.animations.play('right');
+        }else {
+            jude.animations.stop();
         }
 
-        if (cursors.up.isDown)
-        {
-            jude.body.velocity.y = -150;
-            jude.animations.play('up');
-        }
-        else if (cursors.down.isDown)
-        {
-            jude.body.velocity.y = 150;
-            jude.animations.play('down');
-        }
+
 
     };
 
-    setUpRed (){
+    setUpRed() {
         fs.readFile('./resources/app/images/GLtown.json', this.jsonData);
     }
 
-    jsonData (error, jsondata){
+    jsonData(error, jsondata) {
         var mapInfo = JSON.parse(jsondata);
         console.log(mapInfo);
 
@@ -132,16 +147,15 @@ class State {
         var data = mapInfo.layers[3].data;
 
 
-
-        for (var i = 0; i < height*width; i++){
+        for (var i = 0; i < height * width; i++) {
 
             var x = i % width;
             var y = i / width;
             y = Math.floor(y);
 
-            if (data [i] == 1){
+            if (data [i] == 1) {
 
-                var redWall = game.add.sprite(x*32+16, y*32+16, 'redWall');
+                var redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
                 game.physics.p2.enable(redWall);
                 redWall.body.static = true;
 
@@ -151,8 +165,8 @@ class State {
                 redWall.body.collides(judeCollisionGroup);
 
             }
-            else if (data [i] == 2){
-                doorSprite = game.add.sprite(x*32, y*32, 'doorSprite');
+            else if (data [i] == 2) {
+                doorSprite = game.add.sprite(x * 32, y * 32, 'doorSprite');
                 game.physics.p2.enable('doorSprite');
                 //doorSprite.body.static = true;
 
@@ -161,18 +175,18 @@ class State {
                 //doorSprite.body.setCollisionGroup(doorCollisionGroup);
                 //doorSprite.body.collides(judeCollisionGroup);
 
-           }
-           if (data [i] == 3){
-               var redWall = game.add.sprite(x*32, y*32, 'redWall');
-               game.physics.p2.enable(redWall);
-               redWall.body.static = true;
+            }
+            if (data [i] == 3) {
+                var redWall = game.add.sprite(x * 32, y * 32, 'redWall');
+                game.physics.p2.enable(redWall);
+                redWall.body.static = true;
 
-               //redWall.anchor.setTo(0.5);
+                //redWall.anchor.setTo(0.5);
 
-               redWall.body.setCollisionGroup(wallsCollisionGroup);
-               redWall.body.collides(judeCollisionGroup);
+                redWall.body.setCollisionGroup(wallsCollisionGroup);
+                redWall.body.collides(judeCollisionGroup);
 
-           }
+            }
 
 
         }
