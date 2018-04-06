@@ -21,9 +21,17 @@ var doorTransition = [
     { x:20, y:29, state:'WeaponShop'},
 
 ];
+var startX;
+var startY;
 
 
 class State {
+
+    init(x=28,y=31){
+        startX = x;
+        startY = y;
+
+    }
 
 
     preload() {
@@ -69,7 +77,7 @@ class State {
         wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude = game.add.sprite(game.world.centerX, game.world.centerY, 'jude');
+        jude = game.add.sprite(startX*32+16, startY*32+16, 'jude');
         jude.anchor.setTo(0.5);
         game.physics.p2.enable(jude);
         jude.body.fixedRotation = true;
@@ -83,9 +91,9 @@ class State {
         left = jude.animations.add('left', [3, 4, 5], 10, true);
         right = jude.animations.add('right', [6, 7, 8], 10, true);
 
-        door = game.add.sprite(0, 0, 'door');
-        door.alpha = 0;
-        doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        //door = game.add.sprite(0, 0, 'door');
+        //door.alpha = 0;
+        //doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
         cursors = game.input.keyboard.createCursorKeys();
 

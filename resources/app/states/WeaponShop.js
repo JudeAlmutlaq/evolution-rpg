@@ -64,9 +64,12 @@ class State {
 
         door = game.add.sprite(336, 464, 'door');
         door.anchor.setTo(0.5);
+        game.physics.p2.enable(door);
+        door.body.setCollisionGroup(doorCollisionGroup);
+        door.body.collides(judeCollisionGroup, this.toTown, this);
+        door.body.static = true;
 
         cursors = game.input.keyboard.createCursorKeys();
-        game.camera.follow(jude);
 
         this.setUpRed();
     };
@@ -147,6 +150,11 @@ class State {
 
 
         }
+
+    }
+
+    toTown () {
+        game.state.start('Town', true, false, 20, 31);
 
     }
 }
