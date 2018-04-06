@@ -228,20 +228,17 @@ class State {
                 redWall.body.collides(judeCollisionGroup);
 
             } else if (data [i] === 5) {
-                doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
-                game.physics.p2.enable(doorSprite);
-                doorSprite.body.static = true;
+                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                game.physics.p2.enable(redWall);
+                redWall.body.static = true;
 
-                doorSprite.body.doorX = x;
-                doorSprite.body.doorY = y;
+                redWall.body.doorX = x;
+                redWall.body.doorY = y;
 
-                doorSprite.anchor.setTo(0.5);
-                doorSprite.alpha = 0;
-                doorSprite.body.setCollisionGroup(doorCollisionGroup);
+                redWall.anchor.setTo(0.5);
 
-                doorSprite.body.collides(judeCollisionGroup, openDoor, this);
-
-                console.log(x, y);
+                redWall.body.setCollisionGroup(wallsCollisionGroup);
+                redWall.body.collides(judeCollisionGroup, openDoor, this);
             }
         }
     }

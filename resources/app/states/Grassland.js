@@ -31,8 +31,6 @@ class State {
 
     create() {
 
-        game.stage.backgroundColor = "#000000";
-
         grassland = game.add.tilemap('grassland');
         grassland.addTilesetImage('GLtowntiles', 'grassTiles');
         layer0 = grassland.createLayer('green');
@@ -65,15 +63,16 @@ class State {
         right = jude.animations.add('right', [6, 7, 8], 10, true);
 
 
-        door = game.add.sprite(336, 464, 'door');
-        door.anchor.setTo(0.5);
-        game.physics.p2.enable(door);
-        door.body.setCollisionGroup(doorCollisionGroup);
-        door.body.collides(judeCollisionGroup, this.toTown, this);
-        door.body.static = true;
+
+        // door.anchor.setTo(0.5);
+        // game.physics.p2.enable(door);
+        // door.body.setCollisionGroup(doorCollisionGroup);
+        // door.body.collides(judeCollisionGroup, this.toTown, this);
+        // door.body.static = true;
 
         cursors = game.input.keyboard.createCursorKeys();
         game.camera.follow(jude);
+        jude.body.collideWorldBounds = true;
         this.setUpRed();
     };
 
@@ -119,7 +118,7 @@ class State {
     };
 
     setUpRed() {
-        var jsonData = fs.readFileSync('./resources/app/images/GLWeaponShop.json');
+        var jsonData = fs.readFileSync('./resources/app/images/grassland.json');
         this.jsonData(jsonData);
     }
 

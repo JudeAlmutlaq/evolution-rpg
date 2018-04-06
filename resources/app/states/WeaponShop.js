@@ -38,7 +38,6 @@ class State {
         layer0 = weaponShop.createLayer('floor_walls', 544, 480);
         layer0.resizeWorld();
         layer1 = weaponShop.createLayer('furniture', 544, 480);
-        layer1.resizeWorld();
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
