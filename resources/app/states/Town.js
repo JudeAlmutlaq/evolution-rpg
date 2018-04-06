@@ -28,7 +28,8 @@ var startY;
 var inventoryKey;
 var inventoryGroup;
 var goldText;
-
+var menuKey;
+var pauseMenuGroup;
 
 class State {
 
@@ -55,6 +56,12 @@ class State {
         game.load.audio('townMusic', ['audio/townMusic.ogg']);
 
         game.load.image('inventorySprite', 'images/inventory.png');
+
+        game.load.image('pauseMenuGroup', 'images/pauseMenu.png');
+        game.load.image('menuLeaveToD', 'images/leaveToD.png');
+        game.load.image('menuLeaveToM', 'images/leaveToM.png');
+        game.load.image('menuSaveButton', 'images/saveButton.png');
+        game.load.image('menuResumeButton', 'images/resumeButton.png');
     };
 
     create() {
@@ -126,6 +133,17 @@ class State {
         inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
         inventoryKey.onUp.add(this.openInventory);
 
+        menuKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
+        menuKey.onUp.add(this.openMenu);
+
+        pauseMenuGroup = this.game.add.group();
+        pauseMenuGroup.create(0,0, 'pauseMenuGroup');
+        pauseMenuGroup.setAll('anchor.x', 0);
+        pauseMenuGroup.setAll('anchor.y', 0);
+        pauseMenuGroup.setAll('scale.x', 0.6);
+        pauseMenuGroup.setAll('scale.y', 0.6);
+        pauseMenuGroup.setAll('fixedToCamera', true);
+        pauseMenuGroup.alpha = 1;
 
 
     };
@@ -249,6 +267,17 @@ class State {
             console.log('yes');
         } else if (inventoryGroup.alpha === 1){
             inventoryGroup.alpha = 0;
+            console.log('no');
+        }
+        console.log(inventoryGroup.alpha);
+    }
+
+    openMenu(){
+        if (pauseMenuGroup.alpha === 0 ){
+            pauseMenuGroup.alpha = 1;
+            console.log('yes');
+        } else if (pauseMenuGroup.alpha === 1){
+            pauseMenuGroup.alpha = 0;
             console.log('no');
         }
         console.log(inventoryGroup.alpha);
