@@ -113,7 +113,7 @@ class State {
     };
 
     setUpRed() {
-        var jsonData = fs.readFileSync('./resources/app/images/GLtown.json');
+        var jsonData = fs.readFileSync('./resources/app/images/GLWeaponShop.json');
         this.jsonData(jsonData);
     }
 
