@@ -14,11 +14,13 @@ var doorSprite;
 var layer0;
 var layer1;
 var layer2;
+var layer3;
 var music;
 var doorTransition = [
-    { x:37, y:37, state:'PlantShop'},
+    //{ x:37, y:37, state:'PlantShop'},
     //{ x:20, y:29, state:'Inn'},
     { x:20, y:29, state:'WeaponShop'},
+    { x:23, y:58, state:'Grassland'},
 
 ];
 var startX;
@@ -71,9 +73,7 @@ class State {
         //  This resizes the game world to match the layer dimensions
         layer0.resizeWorld();
         layer1 = town.createLayer('trees_buildings');
-        layer1.resizeWorld();
         layer2 = town.createLayer('signs_windows');
-        layer2.resizeWorld();
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
@@ -86,6 +86,8 @@ class State {
         jude.anchor.setTo(0.5);
         game.physics.p2.enable(jude);
         jude.body.fixedRotation = true;
+
+        layer3 = town.createLayer('tree_tops');
 
         jude.body.setCollisionGroup(judeCollisionGroup);
 
@@ -167,8 +169,6 @@ class State {
             jude.animations.stop();
         }
 
-
-
     };
 
     setUpRed() {
@@ -182,7 +182,7 @@ class State {
 
         var height = mapInfo.layers[0].height;
         var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[3].data;
+        var data = mapInfo.layers[4].data;
 
 
         for (var i = 0; i < height * width; i++) {
@@ -203,7 +203,7 @@ class State {
                 redWall.body.collides(judeCollisionGroup);
 
             } else if (data [i] === 2) {
-                doorSprite = game.add.sprite(x * 32+16, y * 32+16, 'doorSprite');
+                doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
                 game.physics.p2.enable(doorSprite);
                 doorSprite.body.static = true;
 
@@ -215,10 +215,10 @@ class State {
 
                 doorSprite.body.collides(judeCollisionGroup, openDoor, this);
 
-                console.log(x,y);
+                console.log(x, y);
 
             } else if (data [i] === 3) {
-                var redWall = game.add.sprite(x * 32+16, y * 32+16, 'redWall');
+                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
                 game.physics.p2.enable(redWall);
                 redWall.body.static = true;
 
@@ -227,11 +227,23 @@ class State {
                 redWall.body.setCollisionGroup(wallsCollisionGroup);
                 redWall.body.collides(judeCollisionGroup);
 
+            } else if (data [i] === 5) {
+                doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
+                game.physics.p2.enable(doorSprite);
+                doorSprite.body.static = true;
+
+                doorSprite.body.doorX = x;
+                doorSprite.body.doorY = y;
+
+                doorSprite.anchor.setTo(0.5);
+                doorSprite.alpha = 0;
+                doorSprite.body.setCollisionGroup(doorCollisionGroup);
+
+                doorSprite.body.collides(judeCollisionGroup, openDoor, this);
+
+                console.log(x, y);
             }
-
-
         }
-
     }
 
     openInventory(){
@@ -249,7 +261,6 @@ class State {
 }
 
 function openDoor (doorBody, judeBody) {
-    //door.animations.play('doorAnim');
     music.stop();
 
     for (var i in doorTransition){

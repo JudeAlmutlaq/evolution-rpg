@@ -1,6 +1,9 @@
-var weaponShop;
+var grassland;
 var layer0;
 var layer1;
+var layer2;
+var layer3;
+var layer4;
 var jude;
 var door;
 var judeCollisionGroup;
@@ -19,11 +22,8 @@ class State {
 
         game.load.spritesheet('jude', 'images/JudeChar.png', 32, 32, 12);
 
-        game.load.tilemap('grassland', 'images/GLWeaponShop.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('weaponTiles', 'images/interiorTiles.png');
-
-        game.load.spritesheet('door', 'images/door.png', 32, 32, 12);
-        game.load.image('doorSprite', 'images/doorSprite.png');
+        game.load.tilemap('grassland', 'images/grassland.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('grassTiles', 'images/GLtownTiles.png');
 
         game.load.image('redWall', 'images/RED.png');
 
@@ -33,12 +33,13 @@ class State {
 
         game.stage.backgroundColor = "#000000";
 
-        weaponShop = game.add.tilemap('grassland');
-        weaponShop.addTilesetImage('interiorTiles', 'weaponTiles');
-        layer0 = weaponShop.createLayer('floor_walls', 544, 480);
+        grassland = game.add.tilemap('grassland');
+        grassland.addTilesetImage('GLtowntiles', 'grassTiles');
+        layer0 = grassland.createLayer('green');
         layer0.resizeWorld();
-        layer1 = weaponShop.createLayer('furniture', 544, 480);
-        layer1.resizeWorld();
+        layer1 = grassland.createLayer('ground1');
+        layer2 = grassland.createLayer('ground2');
+        layer3 = grassland.createLayer('trees_flowers');
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
@@ -47,10 +48,12 @@ class State {
         wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude = game.add.sprite(336, 432, 'jude');
+        jude = game.add.sprite(32*32+16, 16, 'jude');
         jude.anchor.setTo(0.5);
         game.physics.p2.enable(jude);
         jude.body.fixedRotation = true;
+
+        layer4 = grassland.createLayer('above_trees');
 
         jude.body.setCollisionGroup(judeCollisionGroup);
 
@@ -70,7 +73,7 @@ class State {
         door.body.static = true;
 
         cursors = game.input.keyboard.createCursorKeys();
-
+        game.camera.follow(jude);
         this.setUpRed();
     };
 
@@ -126,7 +129,7 @@ class State {
 
         var height = mapInfo.layers[0].height;
         var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[2].data;
+        var data = mapInfo.layers[5].data;
 
 
         for (var i = 0; i < height * width; i++) {
@@ -158,7 +161,6 @@ class State {
 
     }
 }
-
 
 module.exports = {
     state: State
