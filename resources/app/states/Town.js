@@ -9,7 +9,7 @@ var cursors;
 var judeCollisionGroup;
 var wallsCollisionGroup;
 var doorCollisionGroup;
-var doorAnim;
+//var doorAnim;
 var doorSprite;
 var layer0;
 var layer1;
@@ -23,6 +23,9 @@ var doorTransition = [
 ];
 var startX;
 var startY;
+var inventoryKey;
+var inventoryGroup;
+var goldText;
 
 
 class State {
@@ -48,6 +51,8 @@ class State {
         game.load.image('doorSprite', 'images/doorSprite.png');
 
         game.load.audio('townMusic', ['audio/townMusic.ogg']);
+
+        game.load.image('inventorySprite', 'images/inventory.png');
     };
 
     create() {
@@ -100,6 +105,26 @@ class State {
         game.camera.follow(jude);
 
         this.setUpRed();
+
+        inventoryGroup = this.game.add.group();
+        var style = { font: "55px Arial", fill: "#af8f00", align: "center" };
+        inventoryGroup.create(0,0, 'inventorySprite');
+        goldText = game.add.text(-56, -51, world.playerGold, style, inventoryGroup);
+
+
+        inventoryGroup.setAll("scale.x", 0.25);
+        inventoryGroup.setAll("scale.y", 0.25);
+        inventoryGroup.setAll('fixedToCamera', true);
+        inventoryGroup.position.x = game.camera.width;
+        inventoryGroup.position.y = game.camera.height;
+        inventoryGroup.setAll('anchor.x', 1);
+        inventoryGroup.setAll('anchor.y', 1);
+        inventoryGroup.alpha = 0;
+
+        inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
+        inventoryKey.onUp.add(this.openInventory);
+
+
 
     };
 
@@ -207,6 +232,17 @@ class State {
 
         }
 
+    }
+
+    openInventory(){
+        if (inventoryGroup.alpha === 0 ){
+            inventoryGroup.alpha = 1;
+            console.log('yes');
+        } else if (inventoryGroup.alpha === 1){
+            inventoryGroup.alpha = 0;
+            console.log('no');
+        }
+        console.log(inventoryGroup.alpha);
     }
 
 

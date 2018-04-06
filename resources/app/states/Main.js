@@ -65,8 +65,10 @@ function toTown() {
 
     game.state.start('Town');
     music.stop();
+    world.playerGold = 100;
 
 }
+
 
 module.exports = {
     state: State
