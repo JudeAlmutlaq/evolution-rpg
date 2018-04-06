@@ -17,7 +17,8 @@ var layer2;
 var music;
 var doorTransition = [
     { x:37, y:37, state:'PlantShop'},
-    { x:20, y:29, state:'Inn'},
+    //{ x:20, y:29, state:'Inn'},
+    { x:20, y:29, state:'WeaponShop'},
 
 ];
 
@@ -71,19 +72,16 @@ class State {
         jude = game.add.sprite(game.world.centerX, game.world.centerY, 'jude');
         jude.anchor.setTo(0.5);
         game.physics.p2.enable(jude);
+        jude.body.fixedRotation = true;
 
         jude.body.setCollisionGroup(judeCollisionGroup);
 
         jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
 
-        //jude.body.collides(doorCollisionGroup);
-
-        jude.body.fixedRotation = true;
-
+        up = jude.animations.add('up', [9, 10, 11], 10, true);
         down = jude.animations.add('down', [0, 1, 2], 10, true);
         left = jude.animations.add('left', [3, 4, 5], 10, true);
         right = jude.animations.add('right', [6, 7, 8], 10, true);
-        up = jude.animations.add('up', [9, 10, 11], 10, true);
 
         door = game.add.sprite(0, 0, 'door');
         door.alpha = 0;
@@ -207,6 +205,8 @@ class State {
 }
 
 function openDoor (doorBody, judeBody) {
+    //door.animations.play('doorAnim');
+    music.stop();
 
     for (var i in doorTransition){
         var transition = doorTransition[i];
