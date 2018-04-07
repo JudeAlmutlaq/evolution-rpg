@@ -1,7 +1,3 @@
-var text;
-var exitText;
-var style;
-var style2;
 var button;
 var jungle;
 var music;

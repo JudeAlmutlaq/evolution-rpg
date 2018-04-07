@@ -117,19 +117,23 @@ class State {
         this.setUpRed();
 
         inventoryGroup = this.game.add.group();
+        inventoryGroup.scale.set(0.25,0.25);
+        inventoryGroup.fixedToCamera = true;
+
+
         var style = { font: "55px Arial", fill: "#af8f00", align: "center" };
         inventoryGroup.create(0,0, 'inventorySprite');
         goldText = game.add.text(-56, -51, world.playerGold, style, inventoryGroup);
+        inventoryGroup.cameraOffset.x = game.camera.width-inventoryGroup.width;
+        inventoryGroup.cameraOffset.y = game.camera.height-inventoryGroup.height;
 
 
-        inventoryGroup.setAll("scale.x", 0.25);
-        inventoryGroup.setAll("scale.y", 0.25);
-        inventoryGroup.setAll('fixedToCamera', true);
-        inventoryGroup.position.x = game.camera.width;
-        inventoryGroup.position.y = game.camera.height;
-        inventoryGroup.setAll('anchor.x', 1);
-        inventoryGroup.setAll('anchor.y', 1);
-        inventoryGroup.alpha = 0;
+        // inventoryGroup.setAll("scale.x", 0.25);
+        // inventoryGroup.setAll("scale.y", 0.25);
+
+
+
+        inventoryGroup.visible = false;
 
         inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
         inventoryKey.onUp.add(this.openInventory);
@@ -151,10 +155,7 @@ class State {
 
         //menuLeaveToM.events.onInputDown.add(thistoMain);
 
-
-
-
-
+        game.fixColors(0x0d2b00, [layer0,layer1,layer2, layer3]);
     };
 
     update() {
@@ -271,11 +272,11 @@ class State {
     }
 
     openInventory(){
-        if (inventoryGroup.alpha === 0 ){
-            inventoryGroup.alpha = 1;
+        if (inventoryGroup.visible === false ){
+            inventoryGroup.visible = true;
             console.log('yes');
-        } else if (inventoryGroup.alpha === 1){
-            inventoryGroup.alpha = 0;
+        } else if (inventoryGroup.visible === true){
+            inventoryGroup.visible = false;
             console.log('no');
         }
         console.log(inventoryGroup.alpha);
