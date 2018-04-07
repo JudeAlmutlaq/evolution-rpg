@@ -1,11 +1,10 @@
-var jude;
 var town;
 var door;
 var down;
 var left;
 var right;
 var up;
-var cursors;
+
 var judeCollisionGroup;
 var wallsCollisionGroup;
 var doorCollisionGroup;
@@ -30,9 +29,9 @@ var inventoryGroup;
 var goldText;
 var menuKey;
 var pauseMenuGroup;
-var menuLeaveToM;
+var menuLeaveToMenu;
 
-class State {
+class State extends OverworldFunctions{
 
     init(x=28,y=31){
         startX = x;
@@ -59,8 +58,8 @@ class State {
         game.load.image('inventorySprite', 'images/inventory.png');
 
         game.load.image('pauseMenuGroup', 'images/pauseMenu.png');
-        game.load.image('menuLeaveToD', 'images/leaveToD.png');
-        game.load.image('menuLeaveToM', 'images/leaveToM.png');
+        game.load.image('menuLeaveToDesktop', 'images/leaveToD.png');
+        game.load.image('menuLeaveToMenu', 'images/leaveToM.png');
         game.load.image('menuSaveButton', 'images/saveButton.png');
         game.load.image('menuResumeButton', 'images/resumeButton.png');
     };
@@ -90,29 +89,29 @@ class State {
         wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude = game.add.sprite(startX*32+16, startY*32+16, 'jude');
-        jude.anchor.setTo(0.5);
-        game.physics.p2.enable(jude);
-        jude.body.fixedRotation = true;
+        this.jude = game.add.sprite(startX*32+16, startY*32+16, 'jude');
+        this.jude.anchor.setTo(0.5);
+        game.physics.p2.enable(this.jude);
+        this.jude.body.fixedRotation = true;
 
         layer3 = town.createLayer('tree_tops');
 
-        jude.body.setCollisionGroup(judeCollisionGroup);
+        this.jude.body.setCollisionGroup(judeCollisionGroup);
 
-        jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
+        this.jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
 
-        up = jude.animations.add('up', [9, 10, 11], 10, true);
-        down = jude.animations.add('down', [0, 1, 2], 10, true);
-        left = jude.animations.add('left', [3, 4, 5], 10, true);
-        right = jude.animations.add('right', [6, 7, 8], 10, true);
+        up = this.jude.animations.add('up', [9, 10, 11], 10, true);
+        down = this.jude.animations.add('down', [0, 1, 2], 10, true);
+        left = this.jude.animations.add('left', [3, 4, 5], 10, true);
+        right = this.jude.animations.add('right', [6, 7, 8], 10, true);
 
         //door = game.add.sprite(0, 0, 'door');
         //door.alpha = 0;
         //doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
-        cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = game.input.keyboard.createCursorKeys();
 
-        game.camera.follow(jude);
+        game.camera.follow(this.jude);
 
         this.setUpRed();
 
@@ -140,61 +139,38 @@ class State {
 
         pauseMenuGroup = this.game.add.group();
         pauseMenuGroup.create(0,0, 'pauseMenuGroup');
-        menuLeaveToM = pauseMenuGroup.create(110,150, 'menuLeaveToM');
-        menuLeaveToM.x = pauseMenuGroup.width/2;
+
+        menuLeaveToMenu = pauseMenuGroup.create(110,200, 'menuLeaveToMenu');
+        this.menuLeaveToDesktop = pauseMenuGroup.create(0,350, 'menuLeaveToDesktop');
+        this.menuResumeButton = pauseMenuGroup.create(0,500, 'menuResumeButton');
+
+        menuLeaveToMenu.x = pauseMenuGroup.width/2;
+        this.menuLeaveToDesktop.x = pauseMenuGroup.width/2;
+        this.menuResumeButton.x = pauseMenuGroup.width/2;
+
         pauseMenuGroup.scale.x = 0.6;
         pauseMenuGroup.scale.y = 0.6;
-        menuLeaveToM.inputEnabled = true;
-        menuLeaveToM.events.onInputDown.add(this.toMain);
-        menuLeaveToM.anchor.set(0.5);
+
+        menuLeaveToMenu.inputEnabled = true;
+        menuLeaveToMenu.events.onInputDown.add(this.toMain);
+        menuLeaveToMenu.anchor.set(0.5);
+
+        this.menuLeaveToDesktop.inputEnabled = true;
+        this.menuLeaveToDesktop.events.onInputDown.add(closeWindow);
+        this.menuLeaveToDesktop.anchor.set(0.5);
+
+        this.menuResumeButton.inputEnabled = true;
+        this.menuResumeButton.events.onInputDown.add(this.closeMenu);
+        this.menuResumeButton.anchor.set(0.5);
 
         pauseMenuGroup.fixedToCamera = true;
         pauseMenuGroup.visible = false;
-        //pauseMenuGroup.
-
-        //menuLeaveToM.events.onInputDown.add(thistoMain);
 
         game.fixColors(0x0d2b00, [layer0,layer1,layer2, layer3]);
     };
 
     update() {
-
-        jude.body.setZeroVelocity();
-
-        var xDir = 0;
-        var yDir = 0;
-        var speed = 0;
-
-        if (cursors.up.isDown) {
-            yDir--;
-        }
-        if (cursors.down.isDown) {
-            yDir++;
-        }
-        if (cursors.left.isDown) {
-            xDir--;
-        }
-        if (cursors.right.isDown) {
-            xDir++;
-        }
-        if (xDir && yDir){
-            speed = 106;
-        } else {
-            speed = 150;
-        }
-        jude.body.velocity.x = xDir*speed;
-        jude.body.velocity.y = yDir*speed;
-        if (yDir === -1){
-            jude.animations.play('up');
-        } else if (yDir === 1){
-            jude.animations.play('down');
-        } else if (xDir === -1){
-            jude.animations.play('left');
-        }else if (xDir === 1){
-            jude.animations.play('right');
-        }else {
-            jude.animations.stop();
-        }
+        this.handleMovement();
 
     };
 
@@ -290,6 +266,10 @@ class State {
             console.log('no');
         }
         console.log(inventoryGroup.alpha);
+    }
+
+    closeMenu(){
+        pauseMenuGroup.visible = false;
     }
 
     toMain(){

@@ -91921,7 +91921,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * monitoring the duration each frame. When the duration is up the movement is
     * stopped and the `Body.onMoveComplete` signal is dispatched.
     *
-    * Movement also stops if the Body collides or overlaps with any other Body.
+    * OverworldFunctions also stops if the Body collides or overlaps with any other Body.
     *
     * You can control if the velocity should be reset to zero on collision, by using
     * the property `Body.stopVelocityOnCollide`.
@@ -91996,7 +91996,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * specified in this call, the movement is stopped, and the `Body.onMoveComplete`
     * signal is dispatched.
     *
-    * Movement also stops if the Body collides or overlaps with any other Body.
+    * OverworldFunctions also stops if the Body collides or overlaps with any other Body.
     *
     * You can control if the velocity should be reset to zero on collision, by using
     * the property `Body.stopVelocityOnCollide`.
