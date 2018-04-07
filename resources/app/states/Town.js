@@ -30,6 +30,7 @@ var inventoryGroup;
 var goldText;
 var menuKey;
 var pauseMenuGroup;
+var menuLeaveToM;
 
 class State {
 
@@ -136,14 +137,22 @@ class State {
         menuKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
         menuKey.onUp.add(this.openMenu);
 
+
         pauseMenuGroup = this.game.add.group();
         pauseMenuGroup.create(0,0, 'pauseMenuGroup');
+        pauseMenuGroup.create(78,75, 'menuLeaveToM');
         pauseMenuGroup.setAll('anchor.x', 0);
         pauseMenuGroup.setAll('anchor.y', 0);
         pauseMenuGroup.setAll('scale.x', 0.6);
         pauseMenuGroup.setAll('scale.y', 0.6);
+        pauseMenuGroup.setAll('inputEnabled', true);
         pauseMenuGroup.setAll('fixedToCamera', true);
-        pauseMenuGroup.alpha = 1;
+        pauseMenuGroup.alpha = 0;
+
+        //menuLeaveToM.events.onInputDown.add(thistoMain);
+
+
+
 
 
     };
@@ -283,7 +292,9 @@ class State {
         console.log(inventoryGroup.alpha);
     }
 
-
+    toMain(){
+        game.state.start('Main');
+    }
 }
 
 function openDoor (doorBody, judeBody) {
