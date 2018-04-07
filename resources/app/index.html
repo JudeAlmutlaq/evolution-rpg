@@ -65,6 +65,10 @@
             }
 
             game.state.start('Startup');
+
+            ColorFix.game = game;
+            game.add.plugin(ColorFix);
+            game.fixColors = ColorFix.fixColors;
         });
     }
 </script>
