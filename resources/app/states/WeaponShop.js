@@ -31,6 +31,8 @@ class State {
 
     create() {
 
+        this.weaponShopGraphics = game.add.group();
+
         game.stage.backgroundColor = "#000000";
 
         weaponShop = game.add.tilemap('grassland');
@@ -38,6 +40,8 @@ class State {
         layer0 = weaponShop.createLayer('floor_walls', 544, 480);
         layer0.resizeWorld();
         layer1 = weaponShop.createLayer('furniture', 544, 480);
+        this.weaponShopGraphics.add(layer0);
+        this.weaponShopGraphics.add(layer1);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
@@ -46,7 +50,7 @@ class State {
         wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude = game.add.sprite(336, 432, 'jude');
+        jude = this.weaponShopGraphics.create(336, 432, 'jude');
         jude.anchor.setTo(0.5);
         game.physics.p2.enable(jude);
         jude.body.fixedRotation = true;
@@ -61,7 +65,7 @@ class State {
         right = jude.animations.add('right', [6, 7, 8], 10, true);
 
 
-        door = game.add.sprite(336, 464, 'door');
+        door = this.weaponShopGraphics.create(336, 464, 'door');
         door.anchor.setTo(0.5);
         game.physics.p2.enable(door);
         door.body.setCollisionGroup(doorCollisionGroup);
@@ -71,6 +75,8 @@ class State {
         cursors = game.input.keyboard.createCursorKeys();
 
         this.setUpRed();
+
+        this.weaponShopGraphics.fullScreen();
     };
 
     update() {
@@ -116,11 +122,7 @@ class State {
 
     setUpRed() {
         var jsonData = fs.readFileSync('./resources/app/images/GLWeaponShop.json');
-        this.jsonData(jsonData);
-    }
-
-    jsonData(jsondata) {
-        var mapInfo = JSON.parse(jsondata);
+        var mapInfo = JSON.parse(jsonData);
         console.log(mapInfo);
 
         var height = mapInfo.layers[0].height;
@@ -136,7 +138,7 @@ class State {
 
             if (data [i] === 1) {
 
-                var redWall = game.add.sprite(x*32 +16, y*32+16, 'redWall');
+                var redWall = this.weaponShopGraphics.create(x*32 +16, y*32+16, 'redWall');
                 game.physics.p2.enable(redWall);
                 redWall.body.static = true;
 
@@ -149,8 +151,8 @@ class State {
 
 
         }
-
     }
+
 
     toTown () {
         game.state.start('Town', true, false, 20, 31);

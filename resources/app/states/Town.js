@@ -123,7 +123,9 @@ class State {
 
         var style = { font: "55px Arial", fill: "#af8f00", align: "center" };
         inventoryGroup.create(0,0, 'inventorySprite');
-        goldText = game.add.text(-56, -51, world.playerGold, style, inventoryGroup);
+        goldText = game.add.text(1080, 1535, world.playerGold, style, inventoryGroup);
+        goldText.anchor.setTo(1);
+
         inventoryGroup.cameraOffset.x = game.camera.width-inventoryGroup.width;
         inventoryGroup.cameraOffset.y = game.camera.height-inventoryGroup.height;
 
