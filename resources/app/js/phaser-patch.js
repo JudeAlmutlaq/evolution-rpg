@@ -56,3 +56,42 @@ Phaser.Group.prototype.fullScreen = function() {
 
     console.log(this.children);
 };
+
+var ColorFix = new Phaser.Plugin(null, Phaser.PluginManager);
+ColorFix.frame = 0;
+ColorFix.fixingColors = false;
+ColorFix.postUpdate = function() {
+    if (ColorFix.fixingColors === true) {
+        if (ColorFix.frame === 0) {
+            raiseWindowShield(ColorFix.color);
+            ColorFix.originalX = game.camera.x;
+            ColorFix.originalY = game.camera.y;
+
+            game.camera.x += 1;
+            game.camera.y += 1;
+
+            if (game.camera.x === ColorFix.originalX && game.camera.y === ColorFix.originalY) {
+                game.camera.x -= 2;
+                game.camera.y -= 2;
+            }
+        } else if (ColorFix.frame === 1) {
+            game.camera.x = ColorFix.originalX;
+            game.camera.y = ColorFix.originalY;
+        } else if (ColorFix.frame === 2) {
+            for (let i in ColorFix.toFix) {
+                ColorFix.toFix[i].dirty = true;
+            }
+            ColorFix.fixingColors = false;
+            lowerWindowShield();
+        }
+
+        ColorFix.frame += 1;
+    }
+};
+ColorFix.fixColors = function(color, toFix) {
+    ColorFix.color = color;
+    ColorFix.toFix = toFix;
+    ColorFix.frame = 0;
+    ColorFix.fixingColors = true;
+    console.log('color is being fixed');
+};
