@@ -74,6 +74,8 @@ class State {
         game.camera.follow(jude);
         jude.body.collideWorldBounds = true;
         this.setUpRed();
+
+        game.fixColors(0x0d2b00, [layer0,layer1,layer2, layer3, layer4]);
     };
 
     update() {

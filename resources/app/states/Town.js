@@ -117,7 +117,7 @@ class State {
         this.setUpRed();
 
         inventoryGroup = this.game.add.group();
-        inventoryGroup.scale.set(0.25,0.25);
+        inventoryGroup.scale.set(0.25);
         inventoryGroup.fixedToCamera = true;
 
 
@@ -128,12 +128,6 @@ class State {
 
         inventoryGroup.cameraOffset.x = game.camera.width-inventoryGroup.width;
         inventoryGroup.cameraOffset.y = game.camera.height-inventoryGroup.height;
-
-
-        // inventoryGroup.setAll("scale.x", 0.25);
-        // inventoryGroup.setAll("scale.y", 0.25);
-
-
 
         inventoryGroup.visible = false;
 
@@ -146,14 +140,17 @@ class State {
 
         pauseMenuGroup = this.game.add.group();
         pauseMenuGroup.create(0,0, 'pauseMenuGroup');
-        pauseMenuGroup.create(78,75, 'menuLeaveToM');
-        pauseMenuGroup.setAll('anchor.x', 0);
-        pauseMenuGroup.setAll('anchor.y', 0);
-        pauseMenuGroup.setAll('scale.x', 0.6);
-        pauseMenuGroup.setAll('scale.y', 0.6);
-        pauseMenuGroup.setAll('inputEnabled', true);
-        pauseMenuGroup.setAll('fixedToCamera', true);
-        pauseMenuGroup.alpha = 0;
+        menuLeaveToM = pauseMenuGroup.create(110,150, 'menuLeaveToM');
+        menuLeaveToM.x = pauseMenuGroup.width/2;
+        pauseMenuGroup.scale.x = 0.6;
+        pauseMenuGroup.scale.y = 0.6;
+        menuLeaveToM.inputEnabled = true;
+        menuLeaveToM.events.onInputDown.add(this.toMain);
+        menuLeaveToM.anchor.set(0.5);
+
+        pauseMenuGroup.fixedToCamera = true;
+        pauseMenuGroup.visible = false;
+        //pauseMenuGroup.
 
         //menuLeaveToM.events.onInputDown.add(thistoMain);
 
@@ -285,11 +282,11 @@ class State {
     }
 
     openMenu(){
-        if (pauseMenuGroup.alpha === 0 ){
-            pauseMenuGroup.alpha = 1;
+        if (pauseMenuGroup.visible === false ){
+            pauseMenuGroup.visible = true;
             console.log('yes');
-        } else if (pauseMenuGroup.alpha === 1){
-            pauseMenuGroup.alpha = 0;
+        } else if (pauseMenuGroup.visible === true){
+            pauseMenuGroup.visible = false;
             console.log('no');
         }
         console.log(inventoryGroup.alpha);
