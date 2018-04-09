@@ -31,8 +31,8 @@
     let fs = require('fs');
 
     $('body').css('backgroundColor', world.electronPhaserSettings.windowBackgroundColor);
-    let startup = require('./js/startupStage').startup;
-    game.state.add('Startup', startup);
+    let startup = require('./js/bootStage').startup;
+    game.state.add('Boot', startup);
 
     loadCustomScripts();
 
@@ -64,7 +64,7 @@
                 }
             }
 
-            game.state.start('Startup');
+            game.state.start('Boot');
 
             ColorFix.game = game;
             game.add.plugin(ColorFix);

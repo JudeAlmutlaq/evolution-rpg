@@ -1,19 +1,54 @@
 Phaser.StateManager.prototype.__setCurrentState = Phaser.StateManager.prototype.setCurrentState;
+Phaser.StateManager.prototype.__update = Phaser.StateManager.prototype.update;
+Phaser.StateManager.prototype.___loadComplete = Phaser.StateManager.prototype.loadComplete;
 
 Phaser.StateManager.prototype.setCurrentState = function(key) {
-
     this.__setCurrentState(key);
 
     let state = this.states[key];
+    callCustomMethods('preload__', state, this.game);
+};
 
-    let allMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(state))
+Phaser.StateManager.prototype.update = function() {
+    let state = this.callbackContext;
+
+    callCustomMethods('update__', state, this.game);
+    this.__update();
+    callCustomMethods('postUpdate__', state, this.game);
+};
+
+Phaser.StateManager.prototype.loadComplete = function() {
+    if (this._created === false) {
+        let state = this.callbackContext;
+        callCustomMethods('create__', state, this.game);
+    }
+    this.___loadComplete();
+};
+
+function callCustomMethods(prefix, state, game) {
+    let allMethods = getAllMethods(state);
     for(let i in allMethods) {
-        methodName = allMethods[i];
-        if (methodName.startsWith('__pre')) {
-            state[methodName](key);
+        let methodName = allMethods[i];
+        if (methodName.startsWith(prefix)) {
+            state[methodName].call(state, game);
         }
     }
-};
+}
+
+function getAllMethods(obj) {
+    var props = [];
+    var traverse = obj;
+
+    while (traverse && traverse.constructor.name !== 'Object') {
+        props = props.concat(Object.getOwnPropertyNames(traverse));
+        traverse = Object.getPrototypeOf(traverse);
+    }
+
+    return props.sort().filter(function(e, i, arr) {
+        if (e === arr[i+1] || e === 'constructor') return false;
+        return e && {}.toString.call(obj[e]) === '[object Function]';
+    });
+}
 
 Phaser.Sprite.prototype.fullScreen = function() {
     this.fixedToCamera = false;
@@ -93,5 +128,4 @@ ColorFix.fixColors = function(color, toFix) {
     ColorFix.toFix = toFix;
     ColorFix.frame = 0;
     ColorFix.fixingColors = true;
-    console.log('color is being fixed');
 };
