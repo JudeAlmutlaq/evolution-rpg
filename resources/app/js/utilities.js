@@ -9,7 +9,10 @@ function raiseWindowShield(color) {
         world.windowShield.destroy();
     }
     let graphics = game.add.graphics(0, 0);
-    graphics.beginFill(Phaser.Color.hexToRGB(color));
+    if (typeof color === 'int' ) {
+        color = Phaser.Color.hexToRGB(color)
+    }
+    graphics.beginFill(color);
     world.windowShield = graphics.drawRect(0, 0, game.world.width, game.world.height);
 }
 

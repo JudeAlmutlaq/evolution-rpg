@@ -57,9 +57,10 @@ function getAllMethods(obj) {
 }
 
 Phaser.Sprite.prototype.fullScreen = function() {
+    this.scale.set(1);
     this.fixedToCamera = false;
 
-    this.anchor.setTo(.5);
+    this.anchor.set(.5);
 
     if (this.fixedToCamera === false) {
         this.position.x = game.camera.width / 2;
@@ -84,7 +85,7 @@ Phaser.Sprite.prototype.fullScreen = function() {
 };
 
 Phaser.Group.prototype.fullScreen = function() {
-    this.fixedToCamera = false;
+    this.scale.set(1);
 
     let spriteRatio = this.width/this.height;
     let screenRatio = world.electronPhaserSettings.canvasResolution[0] / world.electronPhaserSettings.canvasResolution[1];
@@ -96,10 +97,17 @@ Phaser.Group.prototype.fullScreen = function() {
         scaleFactor = world.electronPhaserSettings.canvasResolution[1] / this.height;
     }
 
-    this.scale.set(scaleFactor, scaleFactor);
+    this.scale.set(scaleFactor);
 
-    this.position.x = game.camera.width / 2 - this.width / 2;
-    this.position.y = game.camera.height / 2 - this.height / 2;
+    console.log(this.fixedToCamera);
+    if (this.fixedToCamera === false) {
+        this.position.x = game.camera.width / 2 - this.width / 2;
+        this.position.y = game.camera.height / 2 - this.height / 2;
+    } else {
+        console.log(game.camera.height, this.height);
+        this.cameraOffset.x = game.camera.width / 2 - this.width / 2;
+        this.cameraOffset.y = game.camera.height / 2 - this.height / 2;
+    }
 };
 
 var ColorFix = new Phaser.Plugin(null, Phaser.PluginManager);
