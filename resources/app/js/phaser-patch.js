@@ -1,28 +1,33 @@
 Phaser.StateManager.prototype.__setCurrentState = Phaser.StateManager.prototype.setCurrentState;
-Phaser.StateManager.prototype.__update = Phaser.StateManager.prototype.update;
-Phaser.StateManager.prototype.___loadComplete = Phaser.StateManager.prototype.loadComplete;
 
 Phaser.StateManager.prototype.setCurrentState = function(key) {
     this.__setCurrentState(key);
 
-    let state = this.states[key];
-    callCustomMethods('preload__', state, this.game);
+    this.onPreloadCallback = this.__customPreloadCallback;
+    this.onCreateCallback = this.__customCreateCallback;
+    this.onUpdateCallback = this.__customUpdateCallback;
 };
 
-Phaser.StateManager.prototype.update = function() {
-    let state = this.callbackContext;
-
-    callCustomMethods('update__', state, this.game);
-    this.__update();
-    callCustomMethods('postUpdate__', state, this.game);
-};
-
-Phaser.StateManager.prototype.loadComplete = function() {
-    if (this._created === false) {
-        let state = this.callbackContext;
-        callCustomMethods('create__', state, this.game);
+Phaser.StateManager.prototype.__customPreloadCallback = function() {
+    callCustomMethods('preload__', this, this.game);
+    if (this.preload) {
+        this.preload.call(this, this.game);
     }
-    this.___loadComplete();
+};
+
+Phaser.StateManager.prototype.__customCreateCallback = function() {
+    callCustomMethods('create__', this, this.game);
+    if (this.create) {
+        this.create.call(this, this.game);
+    }
+};
+
+Phaser.StateManager.prototype.__customUpdateCallback = function() {
+    callCustomMethods('update__', this, this.game);
+    if (this.update) {
+        this.update.call(this, this.game);
+    }
+    callCustomMethods('postUpdate__', this, this.game);
 };
 
 function callCustomMethods(prefix, state, game) {
@@ -33,6 +38,7 @@ function callCustomMethods(prefix, state, game) {
             state[methodName].call(state, game);
         }
     }
+    return allMethods;
 }
 
 function getAllMethods(obj) {
@@ -88,8 +94,6 @@ Phaser.Group.prototype.fullScreen = function() {
 
     this.position.x = game.camera.width / 2 - this.width / 2;
     this.position.y = game.camera.height / 2 - this.height / 2;
-
-    console.log(this.children);
 };
 
 var ColorFix = new Phaser.Plugin(null, Phaser.PluginManager);
