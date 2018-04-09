@@ -60,8 +60,14 @@ Phaser.Sprite.prototype.fullScreen = function() {
     this.fixedToCamera = false;
 
     this.anchor.setTo(.5);
-    this.position.x = game.camera.width / 2;
-    this.position.y = game.camera.height / 2;
+
+    if (this.fixedToCamera === false) {
+        this.position.x = game.camera.width / 2;
+        this.position.y = game.camera.height / 2;
+    } else {
+        this.cameraOffset.x = game.camera.width / 2;
+        this.cameraOffset.y = game.camera.height / 2;
+    }
 
     let spriteRatio = this.width/this.height;
     let screenRatio = world.electronPhaserSettings.canvasResolution[0] / world.electronPhaserSettings.canvasResolution[1];
