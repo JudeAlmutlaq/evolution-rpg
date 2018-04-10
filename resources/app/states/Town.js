@@ -1,41 +1,27 @@
-var town;
-var door;
-var down;
-var left;
-var right;
-var up;
-
-var judeCollisionGroup;
-var wallsCollisionGroup;
-var doorCollisionGroup;
+//var door;
 //var doorAnim;
-var doorSprite;
-var layer0;
-var layer1;
-var layer2;
-var layer3;
-var music;
-var doorTransition = [
-    //{ x:37, y:37, state:'PlantShop'},
-    //{ x:20, y:29, state:'Inn'},
-    { x:20, y:29, state:'WeaponShop'},
-    { x:23, y:58, state:'Grassland'},
-
-];
-var startX;
-var startY;
-var inventoryKey;
 var inventoryGroup;
-var goldText;
-var menuKey;
 var pauseMenuGroup;
-var menuLeaveToMenu;
 
 class State extends OverworldFunctions{
 
+    constructor(){
+        super();
+        this.doorTransition = [
+            //{ x:37, y:37, state:'PlantShop'},
+            //{ x:20, y:29, state:'Inn'},
+            { x:20, y:29, state:'WeaponShop'},
+            { x:23, y:58, state:'Grassland'},
+
+        ];
+        this.pickUpItems = [
+            {x:28, y:29, itemName:'swordWood'},
+        ]
+    }
+
     init(x=28,y=31){
-        startX = x;
-        startY = y;
+        this.startX = x;
+        this.startY = y;
 
     }
 
@@ -62,48 +48,44 @@ class State extends OverworldFunctions{
         game.load.image('menuLeaveToMenu', 'images/leaveToM.png');
         game.load.image('menuSaveButton', 'images/saveButton.png');
         game.load.image('menuResumeButton', 'images/resumeButton.png');
+
+        game.load.image('swordWood', 'images/weapons/swordWood.png');
     };
 
     create() {
 
-        music = game.add.audio('townMusic');
-        //music.play();
+        this.music = game.add.audio('townMusic');
+        //this.music.play();
 
-        //  The 'towm' key here is the Loader key given in game.load.tilemap
-        town = game.add.tilemap('town');
-        //  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
-        //  The second parameter maps this name to the Phaser.Cache key 'tiles'
-        town.addTilesetImage('GLtowntiles', 'townTiles');
-        //  Creates a layer from the ground layer in the map data.
-        //  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
-        layer0 = town.createLayer('Ground');
-        //  This resizes the game world to match the layer dimensions
-        layer0.resizeWorld();
-        layer1 = town.createLayer('trees_buildings');
-        layer2 = town.createLayer('signs_windows');
+        this.town = game.add.tilemap('town');
+        this.town.addTilesetImage('GLtowntiles', 'townTiles');
+        this.layer0 = this.town.createLayer('Ground');
+        this.layer0.resizeWorld();
+        this.layer1 = this.town.createLayer('trees_buildings');
+        this.layer2 = this.town.createLayer('signs_windows');
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        judeCollisionGroup = game.physics.p2.createCollisionGroup();
-        wallsCollisionGroup = game.physics.p2.createCollisionGroup();
-        doorCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.judeCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.jude = game.add.sprite(startX*32+16, startY*32+16, 'jude');
+        this.jude = game.add.sprite(this.startX*32+16, this.startY*32+16, 'jude');
         this.jude.anchor.setTo(0.5);
         game.physics.p2.enable(this.jude);
         this.jude.body.fixedRotation = true;
 
-        layer3 = town.createLayer('tree_tops');
+        this.layer3 = this.town.createLayer('tree_tops');
 
-        this.jude.body.setCollisionGroup(judeCollisionGroup);
+        this.jude.body.setCollisionGroup(this.judeCollisionGroup);
 
-        this.jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
+        this.jude.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
 
-        up = this.jude.animations.add('up', [9, 10, 11], 10, true);
-        down = this.jude.animations.add('down', [0, 1, 2], 10, true);
-        left = this.jude.animations.add('left', [3, 4, 5], 10, true);
-        right = this.jude.animations.add('right', [6, 7, 8], 10, true);
+        this.up = this.jude.animations.add('up', [9, 10, 11], 10, true);
+        this.down = this.jude.animations.add('down', [0, 1, 2], 10, true);
+        this.left = this.jude.animations.add('left', [3, 4, 5], 10, true);
+        this.right = this.jude.animations.add('right', [6, 7, 8], 10, true);
 
         //door = game.add.sprite(0, 0, 'door');
         //door.alpha = 0;
@@ -113,47 +95,53 @@ class State extends OverworldFunctions{
 
         game.camera.follow(this.jude);
 
-        this.setUpRed();
+        this.setUpMap();
+        this.setUpItems();
 
         inventoryGroup = this.game.add.group();
         inventoryGroup.scale.set(0.25);
         inventoryGroup.fixedToCamera = true;
 
 
-        var style = { font: "55px Arial", fill: "#af8f00", align: "center" };
+        this.goldTextStyle = { font: "55px Arial", fill: "#af8f00", align: "center" };
         inventoryGroup.create(0,0, 'inventorySprite');
-        goldText = game.add.text(1080, 1535, world.playerGold, style, inventoryGroup);
-        goldText.anchor.setTo(1);
+        this.goldText = game.add.text(1080, 1633, world.playerGold, this.goldTextStyle, inventoryGroup);
+        this.goldText.anchor.setTo(1);
 
         inventoryGroup.cameraOffset.x = game.camera.width-inventoryGroup.width;
         inventoryGroup.cameraOffset.y = game.camera.height-inventoryGroup.height;
 
         inventoryGroup.visible = false;
 
-        inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
-        inventoryKey.onUp.add(this.openInventory);
+        this.inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
+        this.inventoryKey.onUp.add(this.openInventory);
 
-        menuKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
-        menuKey.onUp.add(this.openMenu);
+        this.menuKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
+        this.menuKey.onUp.add(this.openMenu);
+
+        let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+        enterKey.onUp.add(this.pickUp, this);
+
+
 
 
         pauseMenuGroup = this.game.add.group();
         pauseMenuGroup.create(0,0, 'pauseMenuGroup');
 
-        menuLeaveToMenu = pauseMenuGroup.create(110,200, 'menuLeaveToMenu');
+        this.menuLeaveToMenu = pauseMenuGroup.create(110,200, 'menuLeaveToMenu');
         this.menuLeaveToDesktop = pauseMenuGroup.create(0,350, 'menuLeaveToDesktop');
         this.menuResumeButton = pauseMenuGroup.create(0,500, 'menuResumeButton');
 
-        menuLeaveToMenu.x = pauseMenuGroup.width/2;
+        this.menuLeaveToMenu.x = pauseMenuGroup.width/2;
         this.menuLeaveToDesktop.x = pauseMenuGroup.width/2;
         this.menuResumeButton.x = pauseMenuGroup.width/2;
 
         pauseMenuGroup.scale.x = 0.6;
         pauseMenuGroup.scale.y = 0.6;
 
-        menuLeaveToMenu.inputEnabled = true;
-        menuLeaveToMenu.events.onInputDown.add(this.toMain);
-        menuLeaveToMenu.anchor.set(0.5);
+        this.menuLeaveToMenu.inputEnabled = true;
+        this.menuLeaveToMenu.events.onInputDown.add(this.toMain);
+        this.menuLeaveToMenu.anchor.set(0.5);
 
         this.menuLeaveToDesktop.inputEnabled = true;
         this.menuLeaveToDesktop.events.onInputDown.add(closeWindow);
@@ -166,7 +154,7 @@ class State extends OverworldFunctions{
         pauseMenuGroup.fixedToCamera = true;
         pauseMenuGroup.visible = false;
 
-        game.fixColors(0x0d2b00, [layer0,layer1,layer2, layer3]);
+        game.fixColors(0x0d2b00, [this.layer0,this.layer1,this.layer2, this.layer3]);
     };
 
     update() {
@@ -174,12 +162,8 @@ class State extends OverworldFunctions{
 
     };
 
-    setUpRed() {
-        var jsonData = fs.readFileSync('./resources/app/images/GLtown.json');
-        this.jsonData(jsonData);
-    }
-
-    jsonData(jsondata) {
+    setUpMap() {
+        var jsondata = fs.readFileSync('./resources/app/images/GLtown.json');
         var mapInfo = JSON.parse(jsondata);
         console.log(mapInfo);
 
@@ -202,21 +186,21 @@ class State extends OverworldFunctions{
 
                 redWall.anchor.setTo(0.5);
 
-                redWall.body.setCollisionGroup(wallsCollisionGroup);
-                redWall.body.collides(judeCollisionGroup);
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.judeCollisionGroup);
 
             } else if (data [i] === 2) {
-                doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
-                game.physics.p2.enable(doorSprite);
-                doorSprite.body.static = true;
+                this.doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
+                game.physics.p2.enable(this.doorSprite);
+                this.doorSprite.body.static = true;
 
-                doorSprite.body.doorX = x;
-                doorSprite.body.doorY = y;
+                this.doorSprite.body.doorX = x;
+                this.doorSprite.body.doorY = y;
 
-                doorSprite.anchor.setTo(0.5);
-                doorSprite.body.setCollisionGroup(doorCollisionGroup);
+                this.doorSprite.anchor.setTo(0.5);
+                this.doorSprite.body.setCollisionGroup(this.doorCollisionGroup);
 
-                doorSprite.body.collides(judeCollisionGroup, openDoor, this);
+                this.doorSprite.body.collides(this.judeCollisionGroup, openDoor, this);
 
                 console.log(x, y);
 
@@ -227,8 +211,8 @@ class State extends OverworldFunctions{
 
                 redWall.anchor.setTo(0.5);
 
-                redWall.body.setCollisionGroup(wallsCollisionGroup);
-                redWall.body.collides(judeCollisionGroup);
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.judeCollisionGroup);
 
             } else if (data [i] === 5) {
                 redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
@@ -240,9 +224,28 @@ class State extends OverworldFunctions{
 
                 redWall.anchor.setTo(0.5);
 
-                redWall.body.setCollisionGroup(wallsCollisionGroup);
-                redWall.body.collides(judeCollisionGroup, openDoor, this);
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.judeCollisionGroup, openDoor, this);
             }
+        }
+    }
+
+    setUpItems(){
+        this.itemSprites = [];
+        for (var i in this.pickUpItems){
+            let item = this.pickUpItems [i];
+            let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.itemName);
+            sprite.anchor.set(0.5);
+            this.itemSprites.push(sprite);
+        }
+    }
+
+    pickUp(){
+        for (var i in this.itemSprites){
+            if (this.jude.overlap(this.itemSprites [i])){
+                this.itemSprites [i].destroy();
+            }
+
         }
     }
 
@@ -278,10 +281,10 @@ class State extends OverworldFunctions{
 }
 
 function openDoor (doorBody, judeBody) {
-    music.stop();
+    this.music.stop();
 
-    for (var i in doorTransition){
-        var transition = doorTransition[i];
+    for (var i in this.doorTransition){
+        let transition = this.doorTransition[i];
         if (transition.x === doorBody.doorX && transition.y === doorBody.doorY){
             game.state.start(transition.state);
         }

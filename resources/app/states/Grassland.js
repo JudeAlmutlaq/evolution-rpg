@@ -1,21 +1,5 @@
-var grassland;
-var layer0;
-var layer1;
-var layer2;
-var layer3;
-var layer4;
-var jude;
-var door;
-var judeCollisionGroup;
-var wallsCollisionGroup;
-var doorCollisionGroup;
-var up;
-var down;
-var left;
-var right;
-var cursors;
 
-class State {
+class State extends OverworldFunctions{
 
 
     preload() {
@@ -26,105 +10,64 @@ class State {
         game.load.image('grassTiles', 'images/GLtownTiles.png');
 
         game.load.image('redWall', 'images/RED.png');
-
     };
 
     create() {
 
-        grassland = game.add.tilemap('grassland');
-        grassland.addTilesetImage('GLtowntiles', 'grassTiles');
-        layer0 = grassland.createLayer('green');
-        layer0.resizeWorld();
-        layer1 = grassland.createLayer('ground1');
-        layer2 = grassland.createLayer('ground2');
-        layer3 = grassland.createLayer('trees_flowers');
+        this.grassland = game.add.tilemap('grassland');
+        this.grassland.addTilesetImage('GLtowntiles', 'grassTiles');
+        this.layer0 = this.grassland.createLayer('green');
+        this.layer0.resizeWorld();
+        this.layer1 = this.grassland.createLayer('ground1');
+        this.layer2 = this.grassland.createLayer('ground2');
+        this.layer3 = this.grassland.createLayer('trees_flowers');
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        judeCollisionGroup = game.physics.p2.createCollisionGroup();
-        wallsCollisionGroup = game.physics.p2.createCollisionGroup();
-        doorCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.judeCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude = game.add.sprite(32*32+16, 16, 'jude');
-        jude.anchor.setTo(0.5);
-        game.physics.p2.enable(jude);
-        jude.body.fixedRotation = true;
+        this.jude = game.add.sprite(32*32+16, 16, 'jude');
+        this.jude.anchor.setTo(0.5);
+        game.physics.p2.enable(this.jude);
+        this.jude.body.fixedRotation = true;
 
-        layer4 = grassland.createLayer('above_trees');
+        this.layer4 = this.grassland.createLayer('above_trees');
 
-        jude.body.setCollisionGroup(judeCollisionGroup);
+        this.jude.body.setCollisionGroup(this.judeCollisionGroup);
 
-        jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
+        this.jude.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
 
-        up = jude.animations.add('up', [9, 10, 11], 10, true);
-        down = jude.animations.add('down', [0, 1, 2], 10, true);
-        left = jude.animations.add('left', [3, 4, 5], 10, true);
-        right = jude.animations.add('right', [6, 7, 8], 10, true);
+        this.up = this.jude.animations.add('up', [9, 10, 11], 10, true);
+        this.down = this.jude.animations.add('down', [0, 1, 2], 10, true);
+        this.left = this.jude.animations.add('left', [3, 4, 5], 10, true);
+        this.right = this.jude.animations.add('right', [6, 7, 8], 10, true);
 
 
 
-        // door.anchor.setTo(0.5);
-        // game.physics.p2.enable(door);
-        // door.body.setCollisionGroup(doorCollisionGroup);
-        // door.body.collides(judeCollisionGroup, this.toTown, this);
-        // door.body.static = true;
+        // this.door.anchor.setTo(0.5);
+        // game.physics.p2.enable(this.door);
+        // this.door.body.setCollisionGroup(this.doorCollisionGroup);
+        // this.door.body.collides(this.judeCollisionGroup, this.toTown, this);
+        // this.door.body.static = true;
 
-        cursors = game.input.keyboard.createCursorKeys();
-        game.camera.follow(jude);
-        jude.body.collideWorldBounds = true;
-        this.setUpRed();
+        this.cursors = game.input.keyboard.createCursorKeys();
+        game.camera.follow(this.jude);
+        this.jude.body.collideWorldBounds = true;
+        this.setUpMap();
 
-        game.fixColors(0x0d2b00, [layer0,layer1,layer2, layer3, layer4]);
+        game.fixColors(0x0d2b00, [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4]);
+
     };
 
     update() {
-
-        jude.body.setZeroVelocity();
-
-        var xDir = 0;
-        var yDir = 0;
-        var speed = 0;
-
-        if (cursors.up.isDown) {
-            yDir--;
-        }
-        if (cursors.down.isDown) {
-            yDir++;
-        }
-        if (cursors.left.isDown) {
-            xDir--;
-        }
-        if (cursors.right.isDown) {
-            xDir++;
-        }
-        if (xDir && yDir){
-            speed = 106;
-        } else {
-            speed = 150;
-        }
-        jude.body.velocity.x = xDir*speed;
-        jude.body.velocity.y = yDir*speed;
-        if (yDir === -1){
-            jude.animations.play('up');
-        } else if (yDir === 1){
-            jude.animations.play('down');
-        } else if (xDir === -1){
-            jude.animations.play('left');
-        }else if (xDir === 1){
-            jude.animations.play('right');
-        }else {
-            jude.animations.stop();
-        }
-
+        this.handleMovement();
     };
 
-    setUpRed() {
-        var jsonData = fs.readFileSync('./resources/app/images/grassland.json');
-        this.jsonData(jsonData);
-    }
-
-    jsonData(jsondata) {
+    setUpMap() {
+        var jsondata = fs.readFileSync('./resources/app/images/grassland.json');
         var mapInfo = JSON.parse(jsondata);
         console.log(mapInfo);
 
@@ -147,14 +90,13 @@ class State {
 
                 redWall.anchor.setTo(0.5);
 
-                redWall.body.setCollisionGroup(wallsCollisionGroup);
-                redWall.body.collides(judeCollisionGroup);
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.judeCollisionGroup);
 
             }
 
 
         }
-
     }
 
     toTown () {

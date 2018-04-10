@@ -1,8 +1,3 @@
-var button;
-var jungle;
-var music;
-var exitButton;
-
 
 class State {
 
@@ -15,27 +10,27 @@ class State {
 
     create() {
 
-        music = game.add.audio('openingMusic');
-        //music.play();
+        this.music = game.add.audio('openingMusic');
+        //this.music.play();
 
         game.stage.backgroundColor = "#0d2b00";
 
-        jungle = game.add.sprite(game.camera.width/2, game.camera.height/2, 'jungle_1');
+        this.jungle = game.add.sprite(game.camera.width/2, game.camera.height/2, 'jungle_1');
 
-        jungle.anchor.setTo(0.5);
+        this.jungle.anchor.setTo(0.5);
 
-        jungle.scale.x = 1.5;
-        jungle.scale.y = 1.5;
+        this.jungle.scale.x = 1.5;
+        this.jungle.scale.y = 1.5;
 
-        button = game.add.image(game.camera.width/2, game.camera.height/2, 'button' );
-        button.anchor.setTo(0.5);
-        button.inputEnabled = true;
-        button.events.onInputDown.add(toTown);
+        this.button = game.add.image(game.camera.width/2, game.camera.height/2, 'button' );
+        this.button.anchor.setTo(0.5);
+        this.button.inputEnabled = true;
+        this.button.events.onInputDown.add(toTown);
 
-        exitButton = game.add.image(game.camera.width/2, game.camera.height/2+150, 'exitButton' );
-        exitButton.anchor.setTo(0.5);
-        exitButton.inputEnabled = true;
-        exitButton.events.onInputDown.add(closeWindow);
+        this.exitButton = game.add.image(game.camera.width/2, game.camera.height/2+150, 'exitButton' );
+        this.exitButton.anchor.setTo(0.5);
+        this.exitButton.inputEnabled = true;
+        this.exitButton.events.onInputDown.add(closeWindow);
 
     };
 
@@ -47,7 +42,7 @@ class State {
 function toTown() {
 
     game.state.start('Town');
-    music.stop();
+    //this.music.stop();
     world.playerGold = 100;
 
 }

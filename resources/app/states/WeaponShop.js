@@ -1,18 +1,5 @@
-var weaponShop;
-var layer0;
-var layer1;
-var jude;
-var door;
-var judeCollisionGroup;
-var wallsCollisionGroup;
-var doorCollisionGroup;
-var up;
-var down;
-var left;
-var right;
-var cursors;
 
-class State {
+class State extends OverworldFunctions {
 
 
     preload() {
@@ -27,6 +14,8 @@ class State {
 
         game.load.image('redWall', 'images/RED.png');
 
+        game.load.spritesheet('weaponDealer', 'images/GLWeaponsDealer.png', 32, 32, 12);
+
     };
 
     create() {
@@ -35,92 +24,58 @@ class State {
 
         game.stage.backgroundColor = "#000000";
 
-        weaponShop = game.add.tilemap('grassland');
-        weaponShop.addTilesetImage('interiorTiles', 'weaponTiles');
-        layer0 = weaponShop.createLayer('floor_walls', 544, 480);
-        layer0.resizeWorld();
-        layer1 = weaponShop.createLayer('furniture', 544, 480);
-        this.weaponShopGraphics.add(layer0);
-        this.weaponShopGraphics.add(layer1);
+        this.weaponShop = game.add.tilemap('grassland');
+        this.weaponShop.addTilesetImage('interiorTiles', 'weaponTiles');
+        this.layer0 = this.weaponShop.createLayer('floor_walls', 544, 480);
+        this.layer0.resizeWorld();
+        this.layer1 = this.weaponShop.createLayer('furniture', 544, 480);
+        this.weaponShopGraphics.add(this.layer0);
+        this.weaponShopGraphics.add(this.layer1);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        judeCollisionGroup = game.physics.p2.createCollisionGroup();
-        wallsCollisionGroup = game.physics.p2.createCollisionGroup();
-        doorCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.weaponDealer = this.weaponShopGraphics.create(256, 96,'weaponDealer');
+        this.weaponDealer.frame = 1;
 
-        jude = this.weaponShopGraphics.create(336, 432, 'jude');
-        jude.anchor.setTo(0.5);
-        game.physics.p2.enable(jude);
-        jude.body.fixedRotation = true;
+        this.judeCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        jude.body.setCollisionGroup(judeCollisionGroup);
+        this.jude = this.weaponShopGraphics.create(336, 432, 'jude');
+        this.jude.anchor.setTo(0.5);
+        game.physics.p2.enable(this.jude);
+        this.jude.body.fixedRotation = true;
 
-        jude.body.collides([wallsCollisionGroup, doorCollisionGroup]);
+        this.jude.body.setCollisionGroup(this.judeCollisionGroup);
 
-        up = jude.animations.add('up', [9, 10, 11], 10, true);
-        down = jude.animations.add('down', [0, 1, 2], 10, true);
-        left = jude.animations.add('left', [3, 4, 5], 10, true);
-        right = jude.animations.add('right', [6, 7, 8], 10, true);
+        this.jude.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
+
+        this.up = this.jude.animations.add('up', [9, 10, 11], 10, true);
+        this.down = this.jude.animations.add('down', [0, 1, 2], 10, true);
+        this.left = this.jude.animations.add('left', [3, 4, 5], 10, true);
+        this.right = this.jude.animations.add('right', [6, 7, 8], 10, true);
 
 
-        door = this.weaponShopGraphics.create(336, 464, 'door');
-        door.anchor.setTo(0.5);
-        game.physics.p2.enable(door);
-        door.body.setCollisionGroup(doorCollisionGroup);
-        door.body.collides(judeCollisionGroup, this.toTown, this);
-        door.body.static = true;
+        this.door = this.weaponShopGraphics.create(336, 464, 'door');
+        this.door.anchor.setTo(0.5);
+        game.physics.p2.enable(this.door);
+        this.door.body.setCollisionGroup(this.doorCollisionGroup);
+        this.door.body.collides(this.judeCollisionGroup, this.toTown, this);
+        this.door.body.static = true;
 
-        cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = game.input.keyboard.createCursorKeys();
 
-        this.setUpRed();
+        this.setUpMap();
 
         this.weaponShopGraphics.fullScreen();
     };
 
     update() {
-
-        jude.body.setZeroVelocity();
-
-        var xDir = 0;
-        var yDir = 0;
-        var speed = 0;
-
-        if (cursors.up.isDown) {
-            yDir--;
-        }
-        if (cursors.down.isDown) {
-            yDir++;
-        }
-        if (cursors.left.isDown) {
-            xDir--;
-        }
-        if (cursors.right.isDown) {
-            xDir++;
-        }
-        if (xDir && yDir){
-            speed = 106;
-        } else {
-            speed = 150;
-        }
-        jude.body.velocity.x = xDir*speed;
-        jude.body.velocity.y = yDir*speed;
-        if (yDir === -1){
-            jude.animations.play('up');
-        } else if (yDir === 1){
-            jude.animations.play('down');
-        } else if (xDir === -1){
-            jude.animations.play('left');
-        }else if (xDir === 1){
-            jude.animations.play('right');
-        }else {
-            jude.animations.stop();
-        }
-
+        this.handleMovement();
     };
 
-    setUpRed() {
+    setUpMap() {
         var jsonData = fs.readFileSync('./resources/app/images/GLWeaponShop.json');
         var mapInfo = JSON.parse(jsonData);
         console.log(mapInfo);
@@ -144,8 +99,8 @@ class State {
 
                 redWall.anchor.setTo(0.5);
 
-                redWall.body.setCollisionGroup(wallsCollisionGroup);
-                redWall.body.collides(judeCollisionGroup);
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.judeCollisionGroup);
 
             }
 
