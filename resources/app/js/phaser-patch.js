@@ -1,26 +1,74 @@
 Phaser.StateManager.prototype.__setCurrentState = Phaser.StateManager.prototype.setCurrentState;
 
 Phaser.StateManager.prototype.setCurrentState = function(key) {
-
     this.__setCurrentState(key);
 
-    let state = this.states[key];
+    this.onPreloadCallback = this.__customPreloadCallback;
+    this.onCreateCallback = this.__customCreateCallback;
+    this.onUpdateCallback = this.__customUpdateCallback;
+};
 
-    let allMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(state))
-    for(let i in allMethods) {
-        methodName = allMethods[i];
-        if (methodName.startsWith('__pre')) {
-            state[methodName](key);
-        }
+Phaser.StateManager.prototype.__customPreloadCallback = function() {
+    callCustomMethods('preload__', this, this.game);
+    if (this.preload) {
+        this.preload.call(this, this.game);
     }
 };
 
+Phaser.StateManager.prototype.__customCreateCallback = function() {
+    callCustomMethods('create__', this, this.game);
+    if (this.create) {
+        this.create.call(this, this.game);
+    }
+};
+
+Phaser.StateManager.prototype.__customUpdateCallback = function() {
+    callCustomMethods('update__', this, this.game);
+    if (this.update) {
+        this.update.call(this, this.game);
+    }
+    callCustomMethods('postUpdate__', this, this.game);
+};
+
+function callCustomMethods(prefix, state, game) {
+    let allMethods = getAllMethods(state);
+    for(let i in allMethods) {
+        let methodName = allMethods[i];
+        if (methodName.startsWith(prefix)) {
+            state[methodName].call(state, game);
+        }
+    }
+    return allMethods;
+}
+
+function getAllMethods(obj) {
+    var props = [];
+    var traverse = obj;
+
+    while (traverse && traverse.constructor.name !== 'Object') {
+        props = props.concat(Object.getOwnPropertyNames(traverse));
+        traverse = Object.getPrototypeOf(traverse);
+    }
+
+    return props.sort().filter(function(e, i, arr) {
+        if (e === arr[i+1] || e === 'constructor') return false;
+        return e && {}.toString.call(obj[e]) === '[object Function]';
+    });
+}
+
 Phaser.Sprite.prototype.fullScreen = function() {
+    this.scale.set(1);
     this.fixedToCamera = false;
 
-    this.anchor.setTo(.5);
-    this.position.x = game.camera.width / 2;
-    this.position.y = game.camera.height / 2;
+    this.anchor.set(.5);
+
+    if (this.fixedToCamera === false) {
+        this.position.x = game.camera.width / 2;
+        this.position.y = game.camera.height / 2;
+    } else {
+        this.cameraOffset.x = game.camera.width / 2;
+        this.cameraOffset.y = game.camera.height / 2;
+    }
 
     let spriteRatio = this.width/this.height;
     let screenRatio = world.electronPhaserSettings.canvasResolution[0] / world.electronPhaserSettings.canvasResolution[1];
@@ -37,7 +85,7 @@ Phaser.Sprite.prototype.fullScreen = function() {
 };
 
 Phaser.Group.prototype.fullScreen = function() {
-    this.fixedToCamera = false;
+    this.scale.set(1);
 
     let spriteRatio = this.width/this.height;
     let screenRatio = world.electronPhaserSettings.canvasResolution[0] / world.electronPhaserSettings.canvasResolution[1];
@@ -49,12 +97,17 @@ Phaser.Group.prototype.fullScreen = function() {
         scaleFactor = world.electronPhaserSettings.canvasResolution[1] / this.height;
     }
 
-    this.scale.set(scaleFactor, scaleFactor);
+    this.scale.set(scaleFactor);
 
-    this.position.x = game.camera.width / 2 - this.width / 2;
-    this.position.y = game.camera.height / 2 - this.height / 2;
-
-    console.log(this.children);
+    console.log(this.fixedToCamera);
+    if (this.fixedToCamera === false) {
+        this.position.x = game.camera.width / 2 - this.width / 2;
+        this.position.y = game.camera.height / 2 - this.height / 2;
+    } else {
+        console.log(game.camera.height, this.height);
+        this.cameraOffset.x = game.camera.width / 2 - this.width / 2;
+        this.cameraOffset.y = game.camera.height / 2 - this.height / 2;
+    }
 };
 
 var ColorFix = new Phaser.Plugin(null, Phaser.PluginManager);
@@ -93,5 +146,4 @@ ColorFix.fixColors = function(color, toFix) {
     ColorFix.toFix = toFix;
     ColorFix.frame = 0;
     ColorFix.fixingColors = true;
-    console.log('color is being fixed');
 };

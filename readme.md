@@ -28,4 +28,24 @@ There is a folder `/resources/app/customSctripts`. Any `.js` file placed in this
 
 ## Additional functions
 
-`/resources/app/js/utilities.js` contains other functions that could be of use. `closeWindow` will close the app down.
+`/resources/app/js/utilities.js` contains some other functions that could be of use. 
+
+* `closeWindow()` will completely close the application
+* `raiseWindowShield(color)` will cover the screen with a color, useful when the screen state shouldn't be viewed
+* `lowerWindowShield()` will destroy the window shield
+
+Other functionality added to phaser:
+
+* `.fullscreen()` is a method added to both sprites and groups. This method will scale the object up as large as it can be while fitting inside the window. It will also center the object.
+* `game.fixColors(color, objects)` is a fix for an issue that causes certain objects to have a brighter color in the area where the camera first shows. `color` is the color of the shield that will be raised as the fix is being applied. `objects` is an array of graphics objects that need their color to be fixed. 
+
+## Custom state methods
+
+Additional methods have been provided that will allow you to easily add functionality to a state. These methods are alternatives to the built in game loop methods. The purpose is to allow you to make a base class that has its own update / create / preload functions that will still allow a child class to function normally.
+
+Any method in a state class with the following prefix will be run at the following points:
+
+* `preload__` methods will run before the Phaser `preload` function
+* `create__` methods will run before the Phaser `create` function
+* `update__` methods will run before the Phaser `update` function
+* `postUpdate__` methods will run after the Phaser `update` function
