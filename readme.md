@@ -47,5 +47,6 @@ Any method in a state class with the following prefix will be run at the followi
 
 * `preload__` methods will run before the Phaser `preload` function
 * `create__` methods will run before the Phaser `create` function
+* `postCreate__` methods will run after the Phaser `create` function
 * `update__` methods will run before the Phaser `update` function
 * `postUpdate__` methods will run after the Phaser `update` function
