@@ -20,6 +20,7 @@ Phaser.StateManager.prototype.__customCreateCallback = function() {
     if (this.create) {
         this.create.call(this, this.game);
     }
+    callCustomMethods('postCreate__', this, this.game);
 };
 
 Phaser.StateManager.prototype.__customUpdateCallback = function() {
