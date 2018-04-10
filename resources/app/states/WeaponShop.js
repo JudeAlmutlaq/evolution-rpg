@@ -4,7 +4,7 @@ class State extends OverworldFunctions {
 
     preload() {
 
-        game.load.spritesheet('jude', 'images/JudeChar.png', 32, 32, 12);
+        game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
         game.load.tilemap('grassland', 'images/GLWeaponShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('weaponTiles', 'images/interiorTiles.png');
@@ -38,30 +38,30 @@ class State extends OverworldFunctions {
         this.weaponDealer = this.weaponShopGraphics.create(256, 96,'weaponDealer');
         this.weaponDealer.frame = 1;
 
-        this.judeCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.jude = this.weaponShopGraphics.create(336, 432, 'jude');
-        this.jude.anchor.setTo(0.5);
-        game.physics.p2.enable(this.jude);
-        this.jude.body.fixedRotation = true;
+        this.player = this.weaponShopGraphics.create(336, 432, 'player');
+        this.player.anchor.setTo(0.5);
+        game.physics.p2.enable(this.player);
+        this.player.body.fixedRotation = true;
 
-        this.jude.body.setCollisionGroup(this.judeCollisionGroup);
+        this.player.body.setCollisionGroup(this.playerCollisionGroup);
 
-        this.jude.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
+        this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
 
-        this.up = this.jude.animations.add('up', [9, 10, 11], 10, true);
-        this.down = this.jude.animations.add('down', [0, 1, 2], 10, true);
-        this.left = this.jude.animations.add('left', [3, 4, 5], 10, true);
-        this.right = this.jude.animations.add('right', [6, 7, 8], 10, true);
+        this.up = this.player.animations.add('up', [9, 10, 11], 10, true);
+        this.down = this.player.animations.add('down', [0, 1, 2], 10, true);
+        this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
+        this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
 
         this.door = this.weaponShopGraphics.create(336, 464, 'door');
         this.door.anchor.setTo(0.5);
         game.physics.p2.enable(this.door);
         this.door.body.setCollisionGroup(this.doorCollisionGroup);
-        this.door.body.collides(this.judeCollisionGroup, this.toTown, this);
+        this.door.body.collides(this.playerCollisionGroup, this.toTown, this);
         this.door.body.static = true;
 
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -100,7 +100,7 @@ class State extends OverworldFunctions {
                 redWall.anchor.setTo(0.5);
 
                 redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.judeCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup);
 
             }
 

@@ -1,7 +1,5 @@
 //var door;
 //var doorAnim;
-var inventoryGroup;
-var pauseMenuGroup;
 
 class State extends OverworldFunctions{
 
@@ -29,7 +27,7 @@ class State extends OverworldFunctions{
     preload() {
 
 
-        game.load.spritesheet('jude', 'images/JudeChar.png', 32, 32, 12);
+        game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
         game.load.tilemap('town', 'images/GLtown.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('townTiles', 'images/GLtowntiles.png');
@@ -59,106 +57,54 @@ class State extends OverworldFunctions{
 
         this.town = game.add.tilemap('town');
         this.town.addTilesetImage('GLtowntiles', 'townTiles');
-        this.layer0 = this.town.createLayer('Ground');
-        this.layer0.resizeWorld();
-        this.layer1 = this.town.createLayer('trees_buildings');
-        this.layer2 = this.town.createLayer('signs_windows');
+        this.layers = [];
+
+        this.layers.push(this.town.createLayer('Ground'));
+        this.layers[0].resizeWorld();
+        this.layers.push(this.town.createLayer('trees_buildings'));
+        this.layers.push(this.town.createLayer('signs_windows'));
+        this.layers.push(this.town.createLayer('tree_tops'));
+
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        this.judeCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.jude = game.add.sprite(this.startX*32+16, this.startY*32+16, 'jude');
-        this.jude.anchor.setTo(0.5);
-        game.physics.p2.enable(this.jude);
-        this.jude.body.fixedRotation = true;
+        this.player = game.add.sprite(this.startX*32+16, this.startY*32+16, 'player');
+        this.player.anchor.setTo(0.5);
+        game.physics.p2.enable(this.player);
+        this.player.body.fixedRotation = true;
 
-        this.layer3 = this.town.createLayer('tree_tops');
+        game.world.bringToTop(this.layers[3]);
 
-        this.jude.body.setCollisionGroup(this.judeCollisionGroup);
+        this.player.body.setCollisionGroup(this.playerCollisionGroup);
+        this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
 
-        this.jude.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
-
-        this.up = this.jude.animations.add('up', [9, 10, 11], 10, true);
-        this.down = this.jude.animations.add('down', [0, 1, 2], 10, true);
-        this.left = this.jude.animations.add('left', [3, 4, 5], 10, true);
-        this.right = this.jude.animations.add('right', [6, 7, 8], 10, true);
+        this.up = this.player.animations.add('up', [9, 10, 11], 10, true);
+        this.down = this.player.animations.add('down', [0, 1, 2], 10, true);
+        this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
+        this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
         //door = game.add.sprite(0, 0, 'door');
         //door.alpha = 0;
         //doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
-        this.cursors = game.input.keyboard.createCursorKeys();
+        //this.cursors = game.input.keyboard.createCursorKeys();
 
-        game.camera.follow(this.jude);
+        game.camera.follow(this.player);
 
         this.setUpMap();
-        this.setUpItems();
 
-        inventoryGroup = this.game.add.group();
-        inventoryGroup.scale.set(0.25);
-        inventoryGroup.fixedToCamera = true;
-
-
-        this.goldTextStyle = { font: "55px Arial", fill: "#af8f00", align: "center" };
-        inventoryGroup.create(0,0, 'inventorySprite');
-        this.goldText = game.add.text(1080, 1633, world.playerGold, this.goldTextStyle, inventoryGroup);
-        this.goldText.anchor.setTo(1);
-
-        inventoryGroup.cameraOffset.x = game.camera.width-inventoryGroup.width;
-        inventoryGroup.cameraOffset.y = game.camera.height-inventoryGroup.height;
-
-        inventoryGroup.visible = false;
-
-        this.inventoryKey = game.input.keyboard.addKey(Phaser.KeyCode.I);
-        this.inventoryKey.onUp.add(this.openInventory);
-
-        this.menuKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
-        this.menuKey.onUp.add(this.openMenu);
 
         let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         enterKey.onUp.add(this.pickUp, this);
 
-
-
-
-        pauseMenuGroup = this.game.add.group();
-        pauseMenuGroup.create(0,0, 'pauseMenuGroup');
-
-        this.menuLeaveToMenu = pauseMenuGroup.create(110,200, 'menuLeaveToMenu');
-        this.menuLeaveToDesktop = pauseMenuGroup.create(0,350, 'menuLeaveToDesktop');
-        this.menuResumeButton = pauseMenuGroup.create(0,500, 'menuResumeButton');
-
-        this.menuLeaveToMenu.x = pauseMenuGroup.width/2;
-        this.menuLeaveToDesktop.x = pauseMenuGroup.width/2;
-        this.menuResumeButton.x = pauseMenuGroup.width/2;
-
-        pauseMenuGroup.scale.x = 0.6;
-        pauseMenuGroup.scale.y = 0.6;
-
-        this.menuLeaveToMenu.inputEnabled = true;
-        this.menuLeaveToMenu.events.onInputDown.add(this.toMain);
-        this.menuLeaveToMenu.anchor.set(0.5);
-
-        this.menuLeaveToDesktop.inputEnabled = true;
-        this.menuLeaveToDesktop.events.onInputDown.add(closeWindow);
-        this.menuLeaveToDesktop.anchor.set(0.5);
-
-        this.menuResumeButton.inputEnabled = true;
-        this.menuResumeButton.events.onInputDown.add(this.closeMenu);
-        this.menuResumeButton.anchor.set(0.5);
-
-        pauseMenuGroup.fixedToCamera = true;
-        pauseMenuGroup.visible = false;
-
-        game.fixColors(0x0d2b00, [this.layer0,this.layer1,this.layer2, this.layer3]);
     };
 
     update() {
-        this.handleMovement();
 
     };
 
@@ -187,7 +133,7 @@ class State extends OverworldFunctions{
                 redWall.anchor.setTo(0.5);
 
                 redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.judeCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup);
 
             } else if (data [i] === 2) {
                 this.doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
@@ -200,7 +146,7 @@ class State extends OverworldFunctions{
                 this.doorSprite.anchor.setTo(0.5);
                 this.doorSprite.body.setCollisionGroup(this.doorCollisionGroup);
 
-                this.doorSprite.body.collides(this.judeCollisionGroup, openDoor, this);
+                this.doorSprite.body.collides(this.playerCollisionGroup, openDoor, this);
 
                 console.log(x, y);
 
@@ -212,7 +158,7 @@ class State extends OverworldFunctions{
                 redWall.anchor.setTo(0.5);
 
                 redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.judeCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup);
 
             } else if (data [i] === 5) {
                 redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
@@ -225,62 +171,16 @@ class State extends OverworldFunctions{
                 redWall.anchor.setTo(0.5);
 
                 redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.judeCollisionGroup, openDoor, this);
+                redWall.body.collides(this.playerCollisionGroup, openDoor, this);
             }
         }
     }
 
-    setUpItems(){
-        this.itemSprites = [];
-        for (var i in this.pickUpItems){
-            let item = this.pickUpItems [i];
-            let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.itemName);
-            sprite.anchor.set(0.5);
-            this.itemSprites.push(sprite);
-        }
-    }
 
-    pickUp(){
-        for (var i in this.itemSprites){
-            if (this.jude.overlap(this.itemSprites [i])){
-                this.itemSprites [i].destroy();
-            }
 
-        }
-    }
-
-    openInventory(){
-        if (inventoryGroup.visible === false ){
-            inventoryGroup.visible = true;
-            console.log('yes');
-        } else if (inventoryGroup.visible === true){
-            inventoryGroup.visible = false;
-            console.log('no');
-        }
-        console.log(inventoryGroup.alpha);
-    }
-
-    openMenu(){
-        if (pauseMenuGroup.visible === false ){
-            pauseMenuGroup.visible = true;
-            console.log('yes');
-        } else if (pauseMenuGroup.visible === true){
-            pauseMenuGroup.visible = false;
-            console.log('no');
-        }
-        console.log(inventoryGroup.alpha);
-    }
-
-    closeMenu(){
-        pauseMenuGroup.visible = false;
-    }
-
-    toMain(){
-        game.state.start('Main');
-    }
 }
 
-function openDoor (doorBody, judeBody) {
+function openDoor (doorBody, playerBody) {
     this.music.stop();
 
     for (var i in this.doorTransition){
