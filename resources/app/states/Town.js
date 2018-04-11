@@ -13,7 +13,8 @@ class State extends OverworldFunctions{
 
         ];
         this.pickUpItems = [
-            {x:28, y:29, itemName:'swordWood'},
+            {x:28, y:29, itemName:'swordWood', itemAttack:400},
+            {x:35, y:32, itemName:'sword', itemAttack:400},
         ]
     }
 
@@ -48,6 +49,7 @@ class State extends OverworldFunctions{
         game.load.image('menuResumeButton', 'images/resumeButton.png');
 
         game.load.image('swordWood', 'images/weapons/swordWood.png');
+        game.load.image('sword', 'images/weapons/sword.png');
     };
 
     create() {
@@ -59,7 +61,7 @@ class State extends OverworldFunctions{
         this.town.addTilesetImage('GLtowntiles', 'townTiles');
         this.layers = [];
 
-        this.layers.push(this.town.createLayer('Ground'));
+        this.layers.push(this.town.createLayer('ground'));
         this.layers[0].resizeWorld();
         this.layers.push(this.town.createLayer('trees_buildings'));
         this.layers.push(this.town.createLayer('signs_windows'));
@@ -92,104 +94,17 @@ class State extends OverworldFunctions{
         //door.alpha = 0;
         //doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
-        //this.cursors = game.input.keyboard.createCursorKeys();
-
         game.camera.follow(this.player);
-
-        this.setUpMap();
-
 
         let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         enterKey.onUp.add(this.pickUp, this);
 
+        this.setUpMap('./resources/app/images/GLtown.json');
+
     };
 
     update() {
-
     };
-
-    setUpMap() {
-        var jsondata = fs.readFileSync('./resources/app/images/GLtown.json');
-        var mapInfo = JSON.parse(jsondata);
-        console.log(mapInfo);
-
-        var height = mapInfo.layers[0].height;
-        var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[4].data;
-
-
-        for (var i = 0; i < height * width; i++) {
-
-            var x = i % width;
-            var y = i / width;
-            y = Math.floor(y);
-
-            if (data [i] === 1) {
-
-                var redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
-
-            } else if (data [i] === 2) {
-                this.doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
-                game.physics.p2.enable(this.doorSprite);
-                this.doorSprite.body.static = true;
-
-                this.doorSprite.body.doorX = x;
-                this.doorSprite.body.doorY = y;
-
-                this.doorSprite.anchor.setTo(0.5);
-                this.doorSprite.body.setCollisionGroup(this.doorCollisionGroup);
-
-                this.doorSprite.body.collides(this.playerCollisionGroup, openDoor, this);
-
-                console.log(x, y);
-
-            } else if (data [i] === 3) {
-                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
-
-            } else if (data [i] === 5) {
-                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.body.doorX = x;
-                redWall.body.doorY = y;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup, openDoor, this);
-            }
-        }
-    }
-
-
-
-}
-
-function openDoor (doorBody, playerBody) {
-    this.music.stop();
-
-    for (var i in this.doorTransition){
-        let transition = this.doorTransition[i];
-        if (transition.x === doorBody.doorX && transition.y === doorBody.doorY){
-            game.state.start(transition.state);
-        }
-    }
-
 }
 
 module.exports = {

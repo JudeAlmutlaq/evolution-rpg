@@ -56,47 +56,16 @@ class State extends OverworldFunctions{
         this.cursors = game.input.keyboard.createCursorKeys();
         game.camera.follow(this.player);
         this.player.body.collideWorldBounds = true;
-        this.setUpMap();
 
-        game.fixColors(0x0d2b00, [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4]);
+        this.setUpMap('./resources/app/images/grassland.json');
+
+        game.fixColors('#0d2b00', [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4]);
 
     };
 
     update() {
     };
 
-    setUpMap() {
-        var jsondata = fs.readFileSync('./resources/app/images/grassland.json');
-        var mapInfo = JSON.parse(jsondata);
-        console.log(mapInfo);
-
-        var height = mapInfo.layers[0].height;
-        var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[5].data;
-
-
-        for (var i = 0; i < height * width; i++) {
-
-            var x = i % width;
-            var y = i / width;
-            y = Math.floor(y);
-
-            if (data [i] === 1) {
-
-                var redWall = game.add.sprite(x*32 +16, y*32+16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
-
-            }
-
-
-        }
-    }
 
     toTown () {
         game.state.start('Town', true, false, 20, 31);

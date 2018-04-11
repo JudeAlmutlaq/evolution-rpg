@@ -1,7 +1,6 @@
 
 class State extends OverworldFunctions {
 
-
     preload() {
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
@@ -42,7 +41,7 @@ class State extends OverworldFunctions {
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.player = this.weaponShopGraphics.create(336, 432, 'player');
+        this.player = this.weaponShopGraphics.create(336, 430, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
@@ -66,48 +65,13 @@ class State extends OverworldFunctions {
 
         this.cursors = game.input.keyboard.createCursorKeys();
 
-        this.setUpMap();
+        this.setUpMap('./resources/app/images/GLWeaponShop.json');
 
         this.weaponShopGraphics.fullScreen();
     };
 
     update() {
-        this.handleMovement();
     };
-
-    setUpMap() {
-        var jsonData = fs.readFileSync('./resources/app/images/GLWeaponShop.json');
-        var mapInfo = JSON.parse(jsonData);
-        console.log(mapInfo);
-
-        var height = mapInfo.layers[0].height;
-        var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[2].data;
-
-
-        for (var i = 0; i < height * width; i++) {
-
-            var x = i % width;
-            var y = i / width;
-            y = Math.floor(y);
-
-            if (data [i] === 1) {
-
-                var redWall = this.weaponShopGraphics.create(x*32 +16, y*32+16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
-
-            }
-
-
-        }
-    }
-
 
     toTown () {
         game.state.start('Town', true, false, 20, 31);

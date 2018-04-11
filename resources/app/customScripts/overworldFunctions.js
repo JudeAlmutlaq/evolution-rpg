@@ -50,24 +50,24 @@ class OverworldFunctions {
 
         //buttons
         this.menuLeaveToMenu = this.pauseMenuGroup.create(110,200, 'menuLeaveToMenu');
-        this.menuLeaveToDesktop = this.pauseMenuGroup.create(0,350, 'menuLeaveToDesktop');
-        this.menuResumeButton = this.pauseMenuGroup.create(0,500, 'menuResumeButton');
-
-        this.menuLeaveToMenu.x = this.pauseMenuGroup.width/2;
-        this.menuLeaveToDesktop.x = this.pauseMenuGroup.width/2;
-        this.menuResumeButton.x = this.pauseMenuGroup.width/2;
-
+        this.menuLeaveToMenu.x = this.pauseMenuGroup.getLocalBounds().width/2;
         this.menuLeaveToMenu.inputEnabled = true;
         this.menuLeaveToMenu.events.onInputDown.add(this.toMain, this);
         this.menuLeaveToMenu.anchor.set(0.5);
 
+        this.menuLeaveToDesktop = this.pauseMenuGroup.create(0,350, 'menuLeaveToDesktop');
+        this.menuLeaveToDesktop.x = this.pauseMenuGroup.getLocalBounds().width/2;
         this.menuLeaveToDesktop.inputEnabled = true;
         this.menuLeaveToDesktop.events.onInputDown.add(closeWindow);
         this.menuLeaveToDesktop.anchor.set(0.5);
 
+        this.menuResumeButton = this.pauseMenuGroup.create(0,500, 'menuResumeButton');
+        this.menuResumeButton.x = this.pauseMenuGroup.getLocalBounds().width/2;
         this.menuResumeButton.inputEnabled = true;
         this.menuResumeButton.events.onInputDown.add(this.closeMenu, this);
         this.menuResumeButton.anchor.set(0.5);
+
+
 
     }
 
@@ -95,23 +95,108 @@ class OverworldFunctions {
     }
 
     postCreate__setUpItems(){
-        this.itemSprites = [];
         for (var i in this.pickUpItems){
             let item = this.pickUpItems [i];
             let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.itemName);
             sprite.anchor.set(0.5);
-            this.itemSprites.push(sprite);
+            this.pickUpItems[i].itemSprite = sprite;
+
+
         }
     }
 
     pickUp(){
-        for (var i in this.itemSprites){
-            if (this.player.overlap(this.itemSprites [i])){
-                this.itemSprites [i].destroy();
+        for (var i in this.pickUpItems){
+            if (this.player.overlap(this.pickUpItems[i].itemSprite)){
+                console.log(this.pickUpItems[i]);
+                console.log([i]);
+                //this.pickUpItems[i].itemSprite.destroy();
+                world.inventory.push(this.pickUpItems[i]);
+                console.log(world.inventory);
             }
 
         }
     }
+
+    setUpMap(file) {
+        var jsondata = fs.readFileSync(file);
+        var mapInfo = JSON.parse(jsondata);
+        console.log(mapInfo);
+
+        var height = mapInfo.layers[0].height;
+        var width = mapInfo.layers[0].width;
+        var data = mapInfo.layers[0].data;
+
+
+        for (var i = 0; i < height * width; i++) {
+
+            var x = i % width;
+            var y = i / width;
+            y = Math.floor(y);
+
+            if (data [i] === 1) {
+
+                var redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                game.physics.p2.enable(redWall);
+                redWall.body.static = true;
+
+                redWall.anchor.setTo(0.5);
+
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup);
+
+            } else if (data [i] === 2) {
+                this.doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
+                game.physics.p2.enable(this.doorSprite);
+                this.doorSprite.body.static = true;
+
+                this.doorSprite.body.doorX = x;
+                this.doorSprite.body.doorY = y;
+
+                this.doorSprite.anchor.setTo(0.5);
+                this.doorSprite.body.setCollisionGroup(this.doorCollisionGroup);
+
+                this.doorSprite.body.collides(this.playerCollisionGroup, this.openDoor, this);
+
+                console.log(x, y, 'MONKEYS');
+
+            } else if (data [i] === 3) {
+                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                game.physics.p2.enable(redWall);
+                redWall.body.static = true;
+
+                redWall.anchor.setTo(0.5);
+
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup);
+
+            } else if (data [i] === 5) {
+                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                game.physics.p2.enable(redWall);
+                redWall.body.static = true;
+
+                redWall.body.doorX = x;
+                redWall.body.doorY = y;
+
+                redWall.anchor.setTo(0.5);
+
+                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
+                redWall.body.collides(this.playerCollisionGroup, this.openDoor, this);
+            }
+        }
+    }
+
+    openDoor (doorBody, playerBody) {
+        this.music.stop();
+
+        for (var i in this.doorTransition) {
+            let transition = this.doorTransition[i];
+            if (transition.x === doorBody.doorX && transition.y === doorBody.doorY && transition.state) {
+                game.state.start(transition.state);
+            }
+        }
+    }
+
 
     update__handleMovement(){
         this.player.body.setZeroVelocity();

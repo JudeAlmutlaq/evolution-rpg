@@ -32,6 +32,8 @@ class State {
         this.exitButton.inputEnabled = true;
         this.exitButton.events.onInputDown.add(closeWindow);
 
+        world.inventory = [];
+
     };
 
     update() {
