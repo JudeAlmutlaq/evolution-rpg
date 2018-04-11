@@ -46,10 +46,6 @@ class State extends OverworldFunctions {
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
 
-        this.player.body.setCollisionGroup(this.playerCollisionGroup);
-
-        this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
-
         this.up = this.player.animations.add('up', [9, 10, 11], 10, true);
         this.down = this.player.animations.add('down', [0, 1, 2], 10, true);
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
@@ -62,8 +58,6 @@ class State extends OverworldFunctions {
         this.door.body.setCollisionGroup(this.doorCollisionGroup);
         this.door.body.collides(this.playerCollisionGroup, this.toTown, this);
         this.door.body.static = true;
-
-        this.cursors = game.input.keyboard.createCursorKeys();
 
         this.setUpMap('./resources/app/images/GLWeaponShop.json');
 

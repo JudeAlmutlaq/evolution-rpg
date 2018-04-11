@@ -67,23 +67,12 @@ class State extends OverworldFunctions{
         this.layers.push(this.town.createLayer('signs_windows'));
         this.layers.push(this.town.createLayer('tree_tops'));
 
-
-        game.physics.startSystem(Phaser.Physics.P2JS);
-        game.physics.p2.setImpactEvents(true);
-
-        this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
-        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
-        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
-
         this.player = game.add.sprite(this.startX*32+16, this.startY*32+16, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
 
         game.world.bringToTop(this.layers[3]);
-
-        this.player.body.setCollisionGroup(this.playerCollisionGroup);
-        this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup]);
 
         this.up = this.player.animations.add('up', [9, 10, 11], 10, true);
         this.down = this.player.animations.add('down', [0, 1, 2], 10, true);

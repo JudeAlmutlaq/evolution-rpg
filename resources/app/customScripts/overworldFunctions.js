@@ -3,8 +3,30 @@ console.log('hello');
 class OverworldFunctions {
 
     preload__Cursors(){
-        this.cursors = game.input.keyboard.createCursorKeys();
-        console.log('bananas2')
+
+        this.cursors = {
+            up:game.input.keyboard.addKey(Phaser.KeyCode.W),
+            down:game.input.keyboard.addKey(Phaser.KeyCode.S),
+            left:game.input.keyboard.addKey(Phaser.KeyCode.A),
+            right:game.input.keyboard.addKey(Phaser.KeyCode.D),
+        };
+    }
+
+    create__collisionGroups(){
+
+        game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.p2.setImpactEvents(true);
+
+        this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
+        this.talkCollisionGroup = game.physics.p2.createCollisionGroup();
+    }
+
+    postCreate__setCollisions(){
+
+        this.player.body.setCollisionGroup(this.playerCollisionGroup);
+        this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup, this.talkCollisionGroup]);
     }
 
     create__setUpInventory(){
@@ -32,8 +54,18 @@ class OverworldFunctions {
             this.inventoryGroup.visible = true;
             game.world.bringToTop(this.inventoryGroup);
             console.log('yes');
+            for (var i in world.inventory){
+                let x = i%8;
+                let y = Math.floor(i/8);
+                world.inventory[i].itemSprite = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].itemName);
+                world.inventory[i].itemSprite.scale.set(3);
+            }
         } else if (this.inventoryGroup.visible === true){
             this.inventoryGroup.visible = false;
+            for (var i in world.inventory){
+                world.inventory[i].itemSprite.destroy();
+                world.inventory[i].itemSprite = null;
+            }
             console.log('no');
         }
     }
@@ -75,10 +107,8 @@ class OverworldFunctions {
         if (this.pauseMenuGroup.visible === false ){
             this.pauseMenuGroup.visible = true;
             game.world.bringToTop(this.pauseMenuGroup);
-            console.log('yes');
         } else if (this.pauseMenuGroup.visible === true){
             this.pauseMenuGroup.visible = false;
-            console.log('no');
         }
     }
 
@@ -107,10 +137,11 @@ class OverworldFunctions {
 
     pickUp(){
         for (var i in this.pickUpItems){
-            if (this.player.overlap(this.pickUpItems[i].itemSprite)){
+            if (this.pickUpItems[i].itemSprite && this.player.overlap(this.pickUpItems[i].itemSprite)){
                 console.log(this.pickUpItems[i]);
                 console.log([i]);
-                //this.pickUpItems[i].itemSprite.destroy();
+                this.pickUpItems[i].itemSprite.destroy();
+                this.pickUpItems[i].itemSprite = null;
                 world.inventory.push(this.pickUpItems[i]);
                 console.log(world.inventory);
             }
@@ -136,52 +167,46 @@ class OverworldFunctions {
 
             if (data [i] === 1) {
 
-                var redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
+                let wall = game.add.sprite(x*32+16, y*32+16, 'redWall');
+                game.physics.p2.enable(wall);
+                wall.body.static = true;
+                wall.body.setCollisionGroup(this.wallsCollisionGroup);
+                wall.body.collides(this.playerCollisionGroup);
 
             } else if (data [i] === 2) {
-                this.doorSprite = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
-                game.physics.p2.enable(this.doorSprite);
-                this.doorSprite.body.static = true;
+                let door = game.add.sprite(x*32+16, y*32+16, 'doorSprite');
+                game.physics.p2.enable(door);
+                door.body.static = true;
 
-                this.doorSprite.body.doorX = x;
-                this.doorSprite.body.doorY = y;
+                door.body.doorX = x;
+                door.body.doorY = y;
 
-                this.doorSprite.anchor.setTo(0.5);
-                this.doorSprite.body.setCollisionGroup(this.doorCollisionGroup);
-
-                this.doorSprite.body.collides(this.playerCollisionGroup, this.openDoor, this);
-
-                console.log(x, y, 'MONKEYS');
+                door.body.setCollisionGroup(this.doorCollisionGroup);
+                door.body.collides(this.playerCollisionGroup, this.openDoor, this);
 
             } else if (data [i] === 3) {
-                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
-
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup);
+                let water = game.add.sprite(x*32+16, y*32+16, 'redWall');
+                game.physics.p2.enable(water);
+                water.body.static = true;
+                water.body.setCollisionGroup(this.wallsCollisionGroup);
+                water.body.collides(this.playerCollisionGroup);
 
             } else if (data [i] === 5) {
-                redWall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
-                game.physics.p2.enable(redWall);
-                redWall.body.static = true;
+                let warp = game.add.sprite(x*32+16, y*32+16, 'redWall');
+                game.physics.p2.enable(warp);
+                warp.body.static = true;
+                warp.body.setCollisionGroup(this.wallsCollisionGroup);
+                warp.body.collides(this.playerCollisionGroup, this.openDoor, this);
 
-                redWall.body.doorX = x;
-                redWall.body.doorY = y;
+            } else if (data [i] === 6){
+                let talkZone = game.add.sprite(x*32+16, y*32+16, 'redWall');
+                game.physics.p2.enable(talkZone);
+                talkZone.body.static = true;
+                talkZone.body.setCollisionGroup(this.talkCollisionGroup);
+                talkZone.body.data.shapes[0].sensor = true;
+                talkZone.body.collides(this.playerCollisionGroup);
+                talkZone.body.onBeginContact.add(this.talkPrompt, this);
 
-                redWall.anchor.setTo(0.5);
-
-                redWall.body.setCollisionGroup(this.wallsCollisionGroup);
-                redWall.body.collides(this.playerCollisionGroup, this.openDoor, this);
             }
         }
     }
@@ -195,6 +220,10 @@ class OverworldFunctions {
                 game.state.start(transition.state);
             }
         }
+    }
+
+    talkPrompt () {
+        console.log('talk zone');
     }
 
 
