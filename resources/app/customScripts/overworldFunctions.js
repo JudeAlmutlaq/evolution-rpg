@@ -203,9 +203,10 @@ class OverworldFunctions {
                 game.physics.p2.enable(talkZone);
                 talkZone.body.static = true;
                 talkZone.body.setCollisionGroup(this.talkCollisionGroup);
-                talkZone.body.data.shapes[0].sensor = true;
+                talkZone.body.sensor = true;
                 talkZone.body.collides(this.playerCollisionGroup);
                 talkZone.body.onBeginContact.add(this.talkPrompt, this);
+                talkZone.body.onEndContact.add(this.removeTalkPrompt, this);
 
             }
         }
@@ -222,9 +223,7 @@ class OverworldFunctions {
         }
     }
 
-    talkPrompt () {
-        console.log('talk zone');
-    }
+
 
 
     update__handleMovement(){

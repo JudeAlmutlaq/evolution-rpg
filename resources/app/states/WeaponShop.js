@@ -1,6 +1,12 @@
 
 class State extends OverworldFunctions {
 
+    init(){
+        this.weaponShopItems = [
+            world.itemList.swordWood, world.itemList.sword,
+        ]
+    }
+
     preload() {
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
@@ -14,6 +20,10 @@ class State extends OverworldFunctions {
         game.load.image('redWall', 'images/RED.png');
 
         game.load.spritesheet('weaponDealer', 'images/GLWeaponsDealer.png', 32, 32, 12);
+
+        game.load.image('weaponShopMenu', 'images/weaponShopMenu.png');
+        game.load.image('sword', 'images/weapons/sword.png');
+        game.load.image('swordWood', 'images/weapons/swordWood.png');
 
     };
 
@@ -62,6 +72,9 @@ class State extends OverworldFunctions {
         this.setUpMap('./resources/app/images/GLWeaponShop.json');
 
         this.weaponShopGraphics.fullScreen();
+
+        let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+        enterKey.onUp.add(this.openShopMenu, this);
     };
 
     update() {
@@ -69,6 +82,47 @@ class State extends OverworldFunctions {
 
     toTown () {
         game.state.start('Town', true, false, 20, 31);
+
+    }
+    openShopMenu (){
+        if (this.talkPromptText){
+            if (this.shopGroup){
+                this.shopGroup.destroy();
+                this.shopGroup = null;
+            }else {
+                this.shopGroup = game.add.group();
+                for (let i in this.weaponShopItems){
+                    this.displayItem(game.camera.width/2-250, i*48+100, this.weaponShopItems[i]);
+                }
+                for (let i in world.inventory){
+                    this.displayItem(game.camera.width/2+50, i*48+100, world.inventory[i]);
+                }
+            }
+
+
+        }
+    }
+
+    displayItem(x,y,item){
+        let textStyle = { font: "12px Arial", fill: "#fff", align: "center" };
+        this.shopGroup.create(x, y, 'weaponShopMenu');
+        this.shopGroup.create(x+10, y+5, item.itemName);
+        game.add.text(x+47, y+5, item.displayName, textStyle, this.shopGroup);
+        game.add.text(x+47, y+20, "Attack: "+item.attack, textStyle, this.shopGroup);
+        game.add.text(x+190, y+20, item.cost+" Gold", textStyle, this.shopGroup).anchor.set(1,0);
+    }
+
+    talkPrompt () {
+        let textStyle = { font: "50px Arial", fill: "#fff", align: "center" };
+        this.talkPromptText = game.add.text(266, 45, "!", textStyle, this.weaponShopGraphics);
+    }
+    removeTalkPrompt (){
+        if (this.shopGroup){
+            this.shopGroup.destroy();
+            this.shopGroup = null;
+        }
+        this.talkPromptText.destroy();
+        this.talkPromptText = null;
 
     }
 }

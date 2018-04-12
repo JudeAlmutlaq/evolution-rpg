@@ -3,8 +3,9 @@
 
 class State extends OverworldFunctions{
 
-    constructor(){
-        super();
+    init(x=28,y=31){
+        this.startX = x;
+        this.startY = y;
         this.doorTransition = [
             //{ x:37, y:37, state:'PlantShop'},
             //{ x:20, y:29, state:'Inn'},
@@ -13,14 +14,10 @@ class State extends OverworldFunctions{
 
         ];
         this.pickUpItems = [
-            {x:28, y:29, itemName:'swordWood', itemAttack:400},
-            {x:35, y:32, itemName:'sword', itemAttack:400},
+            //{x:28, y:29, itemName:'swordWood', displayName:'woodenSword', attack:3, cost: 25},
+            {x:35, y:32, itemName:'sword', displayName:'Sword', attack:50, cost: 200},
+            {...world.itemList.swordWood, x:28, y:29, cost:25},
         ]
-    }
-
-    init(x=28,y=31){
-        this.startX = x;
-        this.startY = y;
 
     }
 
