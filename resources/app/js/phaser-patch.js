@@ -142,9 +142,19 @@ ColorFix.postUpdate = function() {
         ColorFix.frame += 1;
     }
 };
+
 ColorFix.fixColors = function(color, toFix) {
     ColorFix.color = color;
     ColorFix.toFix = toFix;
     ColorFix.frame = 0;
     ColorFix.fixingColors = true;
 };
+
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, 'sensor', {
+    set: function(sensorStatus) {
+        sensorStatus = Boolean(sensorStatus);
+        for (let i in this.data.shapes) {
+            this.data.shapes[i].sensor = sensorStatus;
+        }
+    }
+});
