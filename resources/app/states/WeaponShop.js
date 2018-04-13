@@ -3,7 +3,10 @@ class State extends OverworldFunctions {
 
     init(){
         this.weaponShopItems = [
-            world.itemList.swordWood, world.itemList.sword,
+            {spriteName:'swordWood', displayName:'Wooden Sword', attack: 3, cost: 50},
+            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 400},
+            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 300},
+            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 800},
         ]
     }
 
@@ -24,6 +27,8 @@ class State extends OverworldFunctions {
         game.load.image('weaponShopMenu', 'images/weaponShopMenu.png');
         game.load.image('sword', 'images/weapons/sword.png');
         game.load.image('swordWood', 'images/weapons/swordWood.png');
+        game.load.image('weaponShopMenuContainer', 'images/weaponShopMenuContainer.png');
+        game.load.image('inventoryMenuContainer', 'images/inventoryMenuContainer.png');
 
     };
 
@@ -91,6 +96,8 @@ class State extends OverworldFunctions {
                 this.shopGroup = null;
             }else {
                 this.shopGroup = game.add.group();
+                this.shopGroup.create(game.camera.width/2-255, 37,'weaponShopMenuContainer');
+                this.shopGroup.create(game.camera.width/2+45, 37,'inventoryMenuContainer');
                 for (let i in this.weaponShopItems){
                     this.displayItem(game.camera.width/2-250, i*48+100, this.weaponShopItems[i]);
                 }
@@ -106,7 +113,7 @@ class State extends OverworldFunctions {
     displayItem(x,y,item){
         let textStyle = { font: "12px Arial", fill: "#fff", align: "center" };
         this.shopGroup.create(x, y, 'weaponShopMenu');
-        this.shopGroup.create(x+10, y+5, item.itemName);
+        this.shopGroup.create(x+10, y+5, item.spriteName);
         game.add.text(x+47, y+5, item.displayName, textStyle, this.shopGroup);
         game.add.text(x+47, y+20, "Attack: "+item.attack, textStyle, this.shopGroup);
         game.add.text(x+190, y+20, item.cost+" Gold", textStyle, this.shopGroup).anchor.set(1,0);

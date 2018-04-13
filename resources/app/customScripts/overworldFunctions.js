@@ -57,7 +57,7 @@ class OverworldFunctions {
             for (var i in world.inventory){
                 let x = i%8;
                 let y = Math.floor(i/8);
-                world.inventory[i].itemSprite = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].itemName);
+                world.inventory[i].itemSprite = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].spriteName);
                 world.inventory[i].itemSprite.scale.set(3);
             }
         } else if (this.inventoryGroup.visible === true){
@@ -127,7 +127,7 @@ class OverworldFunctions {
     postCreate__setUpItems(){
         for (var i in this.pickUpItems){
             let item = this.pickUpItems [i];
-            let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.itemName);
+            let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.spriteName);
             sprite.anchor.set(0.5);
             this.pickUpItems[i].itemSprite = sprite;
 
