@@ -2,12 +2,6 @@
 class State extends OverworldFunctions {
 
     init(){
-        this.weaponShopItems = [
-            {spriteName:'swordWood', displayName:'Wooden Sword', attack: 3, cost: 50},
-            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 400},
-            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 300},
-            {spriteName:'sword', displayName:'Sword', attack: 50, cost: 800},
-        ]
     }
 
     preload() {
@@ -92,18 +86,9 @@ class State extends OverworldFunctions {
     openShopMenu (){
         if (this.talkPromptText){
             if (this.shopGroup){
-                this.shopGroup.destroy();
-                this.shopGroup = null;
+               this.destroyShopMenu();
             }else {
-                this.shopGroup = game.add.group();
-                this.shopGroup.create(game.camera.width/2-255, 37,'weaponShopMenuContainer');
-                this.shopGroup.create(game.camera.width/2+45, 37,'inventoryMenuContainer');
-                for (let i in this.weaponShopItems){
-                    this.displayItem(game.camera.width/2-250, i*48+100, this.weaponShopItems[i]);
-                }
-                for (let i in world.inventory){
-                    this.displayItem(game.camera.width/2+50, i*48+100, world.inventory[i]);
-                }
+                this.createShopMenu();
             }
 
 
@@ -111,12 +96,76 @@ class State extends OverworldFunctions {
     }
 
     displayItem(x,y,item){
+        let itemGroup = game.add.group();
         let textStyle = { font: "12px Arial", fill: "#fff", align: "center" };
-        this.shopGroup.create(x, y, 'weaponShopMenu');
-        this.shopGroup.create(x+10, y+5, item.spriteName);
-        game.add.text(x+47, y+5, item.displayName, textStyle, this.shopGroup);
-        game.add.text(x+47, y+20, "Attack: "+item.attack, textStyle, this.shopGroup);
-        game.add.text(x+190, y+20, item.cost+" Gold", textStyle, this.shopGroup).anchor.set(1,0);
+        itemGroup.position.set(x,y);
+        let itemBar = itemGroup.create(0, 0, 'weaponShopMenu');
+        itemGroup.create(10, 5, item.spriteName);
+        game.add.text(47, 5, item.displayName, textStyle, itemGroup);
+        game.add.text(47, 20, "Attack: "+item.attack, textStyle, itemGroup);
+        game.add.text(190, 20, item.cost+" Gold", textStyle, itemGroup).anchor.set(1,0);
+        this.shopGroup.add(itemGroup);
+        return itemBar;
+    }
+
+    buyItem(sprite, test, item, itemNumber){
+        if (world.playerGold >= item.cost){
+            sprite.parent.destroy();
+            world.weaponShopItems.splice(itemNumber, 1);
+            world.inventory.push(item);
+            world.playerGold -= item.cost;
+            world.weaponShopGold += item.cost;
+            item.cost /= 2;
+            this.remakeShopMenu();
+        }
+
+
+    }
+
+    sellItem(sprite, test, item, itemNumber){
+        if (world.weaponShopGold >= item.cost){
+            sprite.parent.destroy();
+            world.inventory.splice(itemNumber, 1);
+            world.weaponShopItems.push(item);
+            world.playerGold += item.cost;
+            world.weaponShopGold -= item.cost;
+            item.cost *= 2;
+            this.remakeShopMenu();
+        }
+
+
+    }
+
+    createShopMenu (){
+        this.shopGroup = game.add.group();
+        this.shopGroup.create(game.camera.width/2-255, 37,'weaponShopMenuContainer');
+        this.shopGroup.create(game.camera.width/2+45, 37,'inventoryMenuContainer');
+
+        for (let i in world.weaponShopItems){
+            let itemBar = this.displayItem(game.camera.width/2-250, i*48+100, world.weaponShopItems[i]);
+            itemBar.inputEnabled = true;
+            itemBar.events.onInputDown.add(this.buyItem, this, 0, world.weaponShopItems[i], i);
+        }
+        for (let i in world.inventory){
+            let itemBar = this.displayItem(game.camera.width/2+50, i*48+100, world.inventory[i]);
+            itemBar.inputEnabled = true;
+            itemBar.events.onInputDown.add(this.sellItem, this, 0, world.inventory[i], i);
+        }
+        this.goldTextStyle = { font: "15px Arial", fill: "#af8f00", align: "center" };
+        this.inventoryGold = game.add.text(game.camera.width/2+245, 324, world.playerGold, this.goldTextStyle, this.shopGroup);
+        this.inventoryGold.anchor.setTo(1);
+        this.shopGold = game.add.text(game.camera.width/2-55, 324, world.weaponShopGold, this.goldTextStyle, this.shopGroup);
+        this.shopGold.anchor.setTo(1);
+    }
+
+    destroyShopMenu (){
+        this.shopGroup.destroy();
+        this.shopGroup = null;
+    }
+
+    remakeShopMenu () {
+        this.destroyShopMenu();
+        this.createShopMenu();
     }
 
     talkPrompt () {

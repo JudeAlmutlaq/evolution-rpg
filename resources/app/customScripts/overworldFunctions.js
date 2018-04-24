@@ -195,6 +195,8 @@ class OverworldFunctions {
                 let warp = game.add.sprite(x*32+16, y*32+16, 'redWall');
                 game.physics.p2.enable(warp);
                 warp.body.static = true;
+                warp.body.doorX = x;
+                warp.body.doorY = y;
                 warp.body.setCollisionGroup(this.wallsCollisionGroup);
                 warp.body.collides(this.playerCollisionGroup, this.openDoor, this);
 

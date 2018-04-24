@@ -16,7 +16,7 @@ class State extends OverworldFunctions{
         this.pickUpItems = [
             //{x:28, y:29, spriteName:'swordWood', displayName:'woodenSword', attack:3, cost: 25},
             {x:35, y:32, spriteName:'sword', displayName:'Sword', attack:50, cost: 200},
-            //{...world.itemList.swordWood, x:28, y:29, cost:25},
+            {...world.itemList.swordWood, x:28, y:29, cost:25},
         ]
 
     }

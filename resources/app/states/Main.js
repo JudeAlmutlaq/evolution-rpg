@@ -46,6 +46,13 @@ function toTown() {
     game.state.start('Town');
     //this.music.stop();
     world.playerGold = 100;
+    world.weaponShopGold = 150;
+    world.weaponShopItems = [
+        {spriteName:'swordWood', displayName:'Wooden Sword', attack: 3, cost: 50},
+        {spriteName:'sword', displayName:'Sword', attack: 50, cost: 400},
+        {spriteName:'sword', displayName:'Sword', attack: 50, cost: 300},
+        {spriteName:'sword', displayName:'Sword', attack: 50, cost: 800},
+    ]
 
 }
 
