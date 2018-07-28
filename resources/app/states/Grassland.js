@@ -10,6 +10,8 @@ class State extends OverworldFunctions{
         game.load.image('grassTiles', 'images/GLtownTiles.png');
 
         game.load.image('redWall', 'images/RED.png');
+
+        game.load.image('Cow', 'images/Cow.png');
     };
 
     create() {
