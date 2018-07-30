@@ -90,6 +90,10 @@ class State extends OverworldFunctions{
     };
 
     update() {
+        let randomNumber = game.rnd.between(1,1000);
+        if (randomNumber == 1000) {
+            game.state.start('GrasslandBattle1');
+        }
     };
 }
 
