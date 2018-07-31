@@ -57,7 +57,9 @@ class OverworldFunctions extends MenuFunctions {
                 let x = i%8;
                 let y = Math.floor(i/8);
                 world.inventory[i].itemSprite = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].spriteName);
-                world.inventory[i].itemSprite.scale.set(3);
+                world.inventory[i].itemSprite.width = 96;
+                world.inventory[i].itemSprite.height = 96;
+
             }
         } else if (this.inventoryGroup.visible === true){
             this.inventoryGroup.visible = false;
@@ -99,67 +101,82 @@ class OverworldFunctions extends MenuFunctions {
         }
     }
 
+    layerToGrid(layer){
+        let grid = [];
+        for (let x = 0; x < layer.width; x++){
+            grid.push([]);
+            for (let y = 0; y < layer.height; y++){
+                grid[x].push(0);
+            }
+        }
+        for (var i = 0; i < layer.height * layer.width; i++) {
+
+            var x = i % layer.width;
+            var y = i / layer.width;
+            y = Math.floor(y);
+            grid[x][y]=layer.data[i];
+        }
+        return grid;
+    }
+
     setUpMap(file) {
         var jsondata = fs.readFileSync(file);
-        var mapInfo = JSON.parse(jsondata);
-        console.log(mapInfo);
+        this.mapInfo = JSON.parse(jsondata);
+        console.log(this.mapInfo);
+        this.encounterZone = this.mapInfo.layers[6];
 
-        var height = mapInfo.layers[0].height;
-        var width = mapInfo.layers[0].width;
-        var data = mapInfo.layers[0].data;
+        var data = this.layerToGrid(this.mapInfo.layers[0]);
 
 
-        for (var i = 0; i < height * width; i++) {
+        for (let x = 0; x < data.length; x++) {
+            for (let y = 0; y < data[x].length; y++) {
 
-            var x = i % width;
-            var y = i / width;
-            y = Math.floor(y);
+                if (data [x][y] === 1) {
 
-            if (data [i] === 1) {
+                    let wall = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                    game.physics.p2.enable(wall);
+                    wall.body.static = true;
+                    wall.body.setCollisionGroup(this.wallsCollisionGroup);
+                    wall.body.collides(this.playerCollisionGroup);
 
-                let wall = game.add.sprite(x*32+16, y*32+16, 'redWall');
-                game.physics.p2.enable(wall);
-                wall.body.static = true;
-                wall.body.setCollisionGroup(this.wallsCollisionGroup);
-                wall.body.collides(this.playerCollisionGroup);
+                } else if (data [x][y] === 2) {
+                    let door = game.add.sprite(x * 32 + 16, y * 32 + 16, 'doorSprite');
+                    game.physics.p2.enable(door);
+                    door.body.static = true;
 
-            } else if (data [i] === 2) {
-                let door = game.add.sprite(x*32+16, y*32+16, 'doorSprite');
-                game.physics.p2.enable(door);
-                door.body.static = true;
+                    door.body.doorX = x;
+                    door.body.doorY = y;
 
-                door.body.doorX = x;
-                door.body.doorY = y;
+                    door.body.setCollisionGroup(this.doorCollisionGroup);
+                    door.body.collides(this.playerCollisionGroup, this.openDoor, this);
 
-                door.body.setCollisionGroup(this.doorCollisionGroup);
-                door.body.collides(this.playerCollisionGroup, this.openDoor, this);
+                } else if (data [x][y] === 3) {
+                    let water = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                    game.physics.p2.enable(water);
+                    water.body.static = true;
+                    water.body.setCollisionGroup(this.wallsCollisionGroup);
+                    water.body.collides(this.playerCollisionGroup);
 
-            } else if (data [i] === 3) {
-                let water = game.add.sprite(x*32+16, y*32+16, 'redWall');
-                game.physics.p2.enable(water);
-                water.body.static = true;
-                water.body.setCollisionGroup(this.wallsCollisionGroup);
-                water.body.collides(this.playerCollisionGroup);
+                } else if (data [x][y] === 5) {
+                    let warp = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                    game.physics.p2.enable(warp);
+                    warp.body.static = true;
+                    warp.body.doorX = x;
+                    warp.body.doorY = y;
+                    warp.body.setCollisionGroup(this.wallsCollisionGroup);
+                    warp.body.collides(this.playerCollisionGroup, this.openDoor, this);
 
-            } else if (data [i] === 5) {
-                let warp = game.add.sprite(x*32+16, y*32+16, 'redWall');
-                game.physics.p2.enable(warp);
-                warp.body.static = true;
-                warp.body.doorX = x;
-                warp.body.doorY = y;
-                warp.body.setCollisionGroup(this.wallsCollisionGroup);
-                warp.body.collides(this.playerCollisionGroup, this.openDoor, this);
+                } else if (data [x][y] === 6) {
+                    let talkZone = game.add.sprite(x * 32 + 16, y * 32 + 16, 'redWall');
+                    game.physics.p2.enable(talkZone);
+                    talkZone.body.static = true;
+                    talkZone.body.setCollisionGroup(this.talkCollisionGroup);
+                    talkZone.body.sensor = true;
+                    talkZone.body.collides(this.playerCollisionGroup);
+                    talkZone.body.onBeginContact.add(this.talkPrompt, this);
+                    talkZone.body.onEndContact.add(this.removeTalkPrompt, this);
 
-            } else if (data [i] === 6){
-                let talkZone = game.add.sprite(x*32+16, y*32+16, 'redWall');
-                game.physics.p2.enable(talkZone);
-                talkZone.body.static = true;
-                talkZone.body.setCollisionGroup(this.talkCollisionGroup);
-                talkZone.body.sensor = true;
-                talkZone.body.collides(this.playerCollisionGroup);
-                talkZone.body.onBeginContact.add(this.talkPrompt, this);
-                talkZone.body.onEndContact.add(this.removeTalkPrompt, this);
-
+                }
             }
         }
     }
@@ -174,8 +191,6 @@ class OverworldFunctions extends MenuFunctions {
             }
         }
     }
-
-
 
 
     update__handleMovement(){

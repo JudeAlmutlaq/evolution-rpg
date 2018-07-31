@@ -23,6 +23,7 @@ class State extends OverworldFunctions {
         game.load.image('swordWood', 'images/weapons/swordWood.png');
         game.load.image('weaponShopMenuContainer', 'images/weaponShopMenuContainer.png');
         game.load.image('inventoryMenuContainer', 'images/inventoryMenuContainer.png');
+        game.load.image ('cowBrown', 'images/Cow.png');
 
     };
 
@@ -100,7 +101,9 @@ class State extends OverworldFunctions {
         let textStyle = { font: "12px Arial", fill: "#fff", align: "center" };
         itemGroup.position.set(x,y);
         let itemBar = itemGroup.create(0, 0, 'weaponShopMenu');
-        itemGroup.create(10, 5, item.spriteName);
+        let itemSprite = itemGroup.create(10, 5, item.spriteName);
+        itemSprite.width = 32;
+        itemSprite.height = 32;
         game.add.text(47, 5, item.displayName, textStyle, itemGroup);
         game.add.text(47, 20, "Attack: "+item.attack, textStyle, itemGroup);
         game.add.text(190, 20, item.cost+" Gold", textStyle, itemGroup).anchor.set(1,0);
