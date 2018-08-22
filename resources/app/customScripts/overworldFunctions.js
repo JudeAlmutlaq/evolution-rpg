@@ -103,6 +103,7 @@ class OverworldFunctions extends MenuFunctions {
 
     layerToGrid(layer){
         let grid = [];
+        console.log(layer);
         for (let x = 0; x < layer.width; x++){
             grid.push([]);
             for (let y = 0; y < layer.height; y++){
@@ -123,9 +124,10 @@ class OverworldFunctions extends MenuFunctions {
         var jsondata = fs.readFileSync(file);
         this.mapInfo = JSON.parse(jsondata);
         console.log(this.mapInfo);
-        this.encounterZone = this.mapInfo.layers[6];
+
 
         var data = this.layerToGrid(this.mapInfo.layers[0]);
+        this.encounterZone = this.layerToGrid(this.mapInfo.layers[1]);
 
 
         for (let x = 0; x < data.length; x++) {
@@ -181,6 +183,15 @@ class OverworldFunctions extends MenuFunctions {
         }
     }
 
+    findEncounterZone (){
+        let xPos = Math.floor (this.player.body.x/32);
+        let yPos = Math.floor (this.player.body.y/32);
+        if (this.encounterZone){
+            return this.encounterZone[xPos][yPos];
+        }
+        return 0;
+    }
+
     openDoor (doorBody, playerBody) {
         this.music.stop();
 
@@ -192,8 +203,40 @@ class OverworldFunctions extends MenuFunctions {
         }
     }
 
+    update__checkForEncounters() {
+        if (game.rnd.between(1,600) !== 1){
+            return;
+        }
+        let encounterZone = this.findEncounterZone();
+        if (this.region){
+            let possibleEncounters = world.encounterList[this.region][encounterZone];
+            if (possibleEncounters){
+                world.currentEncounterCreatures = this.randomizeEncounter(possibleEncounters);
+                game.state.start("GrasslandBattle1");
+            }
+        }
+    }
+
+    randomizeEncounter (possibleEncounters){
+        let totalWeight = 0;
+        for (let i = 0; i < possibleEncounters.length; i++){
+            totalWeight += possibleEncounters[i].weight;
+        }
+        let randomEncounter = game.rnd.between(1,totalWeight);
+
+        totalWeight = 0;
+        for (let i = 0; i < possibleEncounters.length; i++){
+            totalWeight += possibleEncounters[i].weight;
+            if (totalWeight >= randomEncounter){
+                return possibleEncounters[i].creatures;
+            }
+        }
+
+    }
+
 
     update__handleMovement(){
+        this.findEncounterZone();
         this.player.body.setZeroVelocity();
 
         var xDir = 0;

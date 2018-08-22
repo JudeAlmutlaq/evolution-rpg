@@ -4,6 +4,8 @@ class State extends OverworldFunctions{
 
     preload() {
 
+        this.region = "Grasslands";
+
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
         game.load.tilemap('grassland', 'images/grassland.json', null, Phaser.Tilemap.TILED_JSON);
@@ -11,7 +13,7 @@ class State extends OverworldFunctions{
 
         game.load.image('redWall', 'images/RED.png');
 
-        game.load.image('Cow', 'images/Cow.png');
+        game.load.image('Cow', 'images/creatures/Cow.png');
     };
 
     create() {
@@ -23,6 +25,8 @@ class State extends OverworldFunctions{
         this.layer1 = this.grassland.createLayer('ground1');
         this.layer2 = this.grassland.createLayer('ground2');
         this.layer3 = this.grassland.createLayer('trees_flowers');
+
+
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);

@@ -23,7 +23,7 @@ class State extends OverworldFunctions {
         game.load.image('swordWood', 'images/weapons/swordWood.png');
         game.load.image('weaponShopMenuContainer', 'images/weaponShopMenuContainer.png');
         game.load.image('inventoryMenuContainer', 'images/inventoryMenuContainer.png');
-        game.load.image ('cowBrown', 'images/Cow.png');
+        game.load.image ('cowBrown', 'images/creatures/Cow.png');
 
     };
 

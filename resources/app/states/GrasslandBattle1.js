@@ -1,7 +1,10 @@
 class State extends MenuFunctions {
     preload() {
+
         game.load.image('battleBack', 'images/GrasslandBattleBackground.png');
-        game.load.image ('cowBrown', 'images/Cow.png');
+        game.load.image ('cowBrown', 'images/creatures/Cow.png');
+        game.load.image ('cowBlack', 'images/creatures/BlackCow.png');
+        game.load.image ('zebra', 'images/creatures/zebra.png');
         game.load.image('playerLeft', 'images/playerLeft2.png');
         game.load.image('captureButton', 'images/CaptureButton.png');
         game.load.image('captureButtonDown', 'images/CaptureButtonDown.png');
@@ -14,15 +17,16 @@ class State extends MenuFunctions {
         this.battleBack = this.grasslandBattleGraphics.create(0, 0, 'battleBack');
         this.allCreatures = [];
 
-        let numberOfCows = game.rnd.between(1,3);
+
+        console.log(world.currentEncounterCreatures);
         this.totalCaptured = 0;
 
-        for (let i = 0; i < numberOfCows; i++){
-            let cowBrownSprite = this.grasslandBattleGraphics.create(350+650*i, 900+700*i, 'cowBrown');
-            let cowStats = {captureOdds: game.rnd.between(1,10), ...world.creatureList.cowBrown, itemSprite: cowBrownSprite, captured: false};
-            this.allCreatures.push(cowStats);
-            game.add.text(47+50*i, 5, cowStats.captureOdds, {font: "12px Arial", fill: "#fff", align: "center" });
-            cowBrownSprite.scale.set(.7);
+        for (let i = 0; i < world.currentEncounterCreatures.length; i++){
+            let creatureSprite = this.grasslandBattleGraphics.create(350+650*i, 900+700*i, world.currentEncounterCreatures[i]);
+            let creatureStats = {captureOdds: game.rnd.between(1,10), ...world.creatureList[world.currentEncounterCreatures[i]], itemSprite: creatureSprite, captured: false};
+            this.allCreatures.push(creatureStats);
+            game.add.text(47+50*i, 5, creatureStats.captureOdds, {font: "12px Arial", fill: "#fff", align: "center" });
+            creatureSprite.scale.set(.7);
         }
         this.playerLeft = this.grasslandBattleGraphics.create(4700, 1200, 'playerLeft');
         this.playerLeft.scale.set(2.5);

@@ -23,6 +23,7 @@ class State extends OverworldFunctions{
 
 
     preload() {
+        this.region = "Town";
 
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
@@ -47,7 +48,7 @@ class State extends OverworldFunctions{
 
         game.load.image('swordWood', 'images/weapons/swordWood.png');
         game.load.image('sword', 'images/weapons/sword.png');
-        game.load.image('cowBrown', 'images/cow.png');
+        game.load.image('cowBrown', 'images/creatures/cow.png');
     };
 
     create() {
@@ -64,6 +65,7 @@ class State extends OverworldFunctions{
         this.layers.push(this.town.createLayer('trees_buildings'));
         this.layers.push(this.town.createLayer('signs_windows'));
         this.layers.push(this.town.createLayer('tree_tops'));
+
 
         this.player = game.add.sprite(this.startX*32+16, this.startY*32+16, 'player');
         this.player.anchor.setTo(0.5);
@@ -91,10 +93,6 @@ class State extends OverworldFunctions{
     };
 
     update() {
-        let randomNumber = game.rnd.between(1,1000);
-        if (randomNumber == 1000) {
-            game.state.start('GrasslandBattle1');
-        }
     };
 }
 
