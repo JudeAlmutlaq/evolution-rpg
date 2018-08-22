@@ -4,8 +4,12 @@ class State extends MenuFunctions {
         game.load.image('battleBack', 'images/GrasslandBattleBackground.png');
         game.load.image ('cowBrown', 'images/creatures/Cow.png');
         game.load.image ('cowBlack', 'images/creatures/BlackCow.png');
+        game.load.image ('brownHorse', 'images/creatures/brownHorse.png');
         game.load.image ('zebra', 'images/creatures/zebra.png');
+        game.load.image ('hyena', 'images/creatures/hyena.png');
+        game.load.image ('lioness', 'images/creatures/lioness.png');
         game.load.image('playerLeft', 'images/playerLeft2.png');
+        game.load.image ('brownLlama', 'images/creatures/brownLlama.png');
         game.load.image('captureButton', 'images/CaptureButton.png');
         game.load.image('captureButtonDown', 'images/CaptureButtonDown.png');
 
