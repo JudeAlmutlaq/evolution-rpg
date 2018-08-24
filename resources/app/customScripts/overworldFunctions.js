@@ -184,10 +184,8 @@ class OverworldFunctions extends MenuFunctions {
     }
 
     findEncounterZone (){
-        let xPos = Math.floor (this.player.body.x/32);
-        let yPos = Math.floor (this.player.body.y/32);
         if (this.encounterZone){
-            return this.encounterZone[xPos][yPos];
+            return this.encounterZone[world.playerX][world.playerY];
         }
         return 0;
     }
@@ -198,7 +196,14 @@ class OverworldFunctions extends MenuFunctions {
         for (var i in this.doorTransition) {
             let transition = this.doorTransition[i];
             if (transition.x === doorBody.doorX && transition.y === doorBody.doorY && transition.state) {
+                if (transition.newX !== undefined && transition.newY !== undefined){
+                    world.playerX = transition.newX;
+                    world.playerY = transition.newY;
+                    world.playerPixelX = world.playerX*32+16;
+                    world.playerPixelY = world.playerY*32+16;
+                }
                 game.state.start(transition.state);
+
             }
         }
     }
@@ -208,8 +213,8 @@ class OverworldFunctions extends MenuFunctions {
             return;
         }
         let encounterZone = this.findEncounterZone();
-        if (this.region){
-            let possibleEncounters = world.encounterList[this.region][encounterZone];
+        if (world.region){
+            let possibleEncounters = world.encounterList[world.region][encounterZone];
             if (possibleEncounters){
                 world.currentEncounterCreatures = this.randomizeEncounter(possibleEncounters);
                 game.state.start("GrasslandBattle1");
@@ -236,6 +241,10 @@ class OverworldFunctions extends MenuFunctions {
 
 
     update__handleMovement(){
+        world.playerPixelX = this.player.body.x;
+        world.playerPixelY = this.player.body.y;
+        world.playerX = Math.floor (this.player.body.x/32);
+        world.playerY = Math.floor (this.player.body.y/32);
         this.findEncounterZone();
         this.player.body.setZeroVelocity();
 

@@ -10,7 +10,7 @@ class State extends OverworldFunctions{
             //{ x:37, y:37, state:'PlantShop'},
             //{ x:20, y:29, state:'Inn'},
             { x:20, y:29, state:'WeaponShop'},
-            { x:23, y:58, state:'Grassland'},
+            { x:23, y:58, state:'Grassland', newX:32, newY:0},
 
         ];
         this.pickUpItems = [
@@ -23,7 +23,7 @@ class State extends OverworldFunctions{
 
 
     preload() {
-        this.region = "Town";
+        world.region = "Town";
 
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
@@ -67,7 +67,7 @@ class State extends OverworldFunctions{
         this.layers.push(this.town.createLayer('tree_tops'));
 
 
-        this.player = game.add.sprite(this.startX*32+16, this.startY*32+16, 'player');
+        this.player = game.add.sprite(world.playerPixelX, world.playerPixelY, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;

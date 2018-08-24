@@ -1,10 +1,21 @@
 
 class State extends OverworldFunctions{
 
+    init(x=32,y=0) {
+        this.startX = x;
+        this.startY = y;
+        this.doorTransition = [
+            //{ x:37, y:37, state:'PlantShop'},
+            //{ x:20, y:29, state:'Inn'},
+            {x: 20, y: 29, state: 'WeaponShop'},
+            {x: 23, y: 58, state: 'Grassland'},
+
+        ];
+    }
 
     preload() {
 
-        this.region = "Grasslands";
+        world.region = "Grassland";
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
@@ -35,7 +46,7 @@ class State extends OverworldFunctions{
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.player = game.add.sprite(32*32+16, 16, 'player');
+        this.player = game.add.sprite(world.playerPixelX, world.playerPixelY, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
@@ -60,7 +71,7 @@ class State extends OverworldFunctions{
 
         this.setUpMap('./resources/app/images/grassland.json');
 
-        game.fixColors('#0d2b00', [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4]);
+        this.layers = [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4];
 
     };
 

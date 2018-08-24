@@ -25,7 +25,7 @@ class State {
         this.button = game.add.image(game.camera.width/2, game.camera.height/2, 'button' );
         this.button.anchor.setTo(0.5);
         this.button.inputEnabled = true;
-        this.button.events.onInputDown.add(toTown);
+        this.button.events.onInputDown.add(newGame);
 
         this.exitButton = game.add.image(game.camera.width/2, game.camera.height/2+150, 'exitButton' );
         this.exitButton.anchor.setTo(0.5);
@@ -41,7 +41,11 @@ class State {
     };
 }
 
-function toTown() {
+function newGame() {
+    world.playerX = 28;
+    world.playerY = 31;
+    world.playerPixelX = world.playerX*32+16;
+    world.playerPixelY = world.playerY*32+16;
 
     game.state.start('Town');
     //this.music.stop();

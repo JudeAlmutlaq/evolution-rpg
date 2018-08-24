@@ -61,15 +61,12 @@ function captureChance (){
         if (randomNumber === 1 && creature.captured === false) {
             this.totalCaptured ++;
             creature.captured = true;
-            console.log("you did it!");
             creature.itemSprite.destroy();
-            //this.cowBrown = null;
             world.inventory.push(creature);
-            //game.state.start("Town");
         }
     }
     if (this.totalCaptured === this.allCreatures.length){
-        game.state.start("Town");
+        game.state.start(world.region, true, false, world.playerX, world.playerY);
     }
 
 }
