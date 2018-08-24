@@ -30,7 +30,8 @@ class State extends MenuFunctions {
             let creatureStats = {captureOdds: game.rnd.between(1,10), ...world.creatureList[world.currentEncounterCreatures[i]], itemSprite: creatureSprite, captured: false};
             this.allCreatures.push(creatureStats);
             game.add.text(47+50*i, 5, creatureStats.captureOdds, {font: "12px Arial", fill: "#fff", align: "center" });
-            creatureSprite.scale.set(.7);
+            creatureSprite.width=400;
+            creatureSprite.scale.set(creatureSprite.scale.x);
         }
         this.playerLeft = this.grasslandBattleGraphics.create(4700, 1200, 'playerLeft');
         this.playerLeft.scale.set(2.5);
