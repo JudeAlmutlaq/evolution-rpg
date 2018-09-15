@@ -37,12 +37,12 @@
     loadCustomScripts();
 
     function loadCustomScripts() {
-        loadScriptDirectory('./resources/app/customScripts/startup/');
-        loadScriptDirectory('./resources/app/customScripts/');
+        loadScriptDirectory('./resources/app/customScripts/startup/', 'customScripts/startup/');
+        loadScriptDirectory('./resources/app/customScripts/', 'customScripts/');
         loadStates();
     }
 
-    function loadScriptDirectory(directory) {
+    function loadScriptDirectory(readDirectory, includeDirectory) {
         let allFiles = fs.readdirSync(directory);
 
         for (let filePath of allFiles) {
@@ -50,7 +50,7 @@
 
             let fileType = filenameSplit[1];
             if (fileType === 'js') {
-                $.getScript('customScripts/'+filePath);
+                $.getScript(includeDirectory+filePath);
             }
         }
 
