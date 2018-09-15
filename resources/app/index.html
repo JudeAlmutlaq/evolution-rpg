@@ -43,7 +43,7 @@
     }
 
     function loadScriptDirectory(readDirectory, includeDirectory) {
-        let allFiles = fs.readdirSync(directory);
+        let allFiles = fs.readdirSync(readDirectory);
 
         for (let filePath of allFiles) {
             let filenameSplit = filePath.split(".");
