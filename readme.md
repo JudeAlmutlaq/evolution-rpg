@@ -24,7 +24,7 @@ There will be a global variable defined called `world`. Properties inside the `w
 
 ## Custom scripts folder
 
-There is a folder `/resources/app/customSctripts`. Any `.js` file placed in this folder will be included. Functions, variables and classes defined in these files will be placed in the global namespace.
+There is a folder `/resources/app/customSctripts`. Any `.js` file placed in this folder will be included. Functions, variables and classes defined in these files will be placed in the global namespace. All subdirectories within the module will have their contents loaded before the scripts outside the subdirectory.
 
 ## Additional functions
 

@@ -37,23 +37,25 @@
     loadCustomScripts();
 
     function loadCustomScripts() {
-        loadScriptDirectory('./resources/app/customScripts/startup/', 'customScripts/startup/');
-        loadScriptDirectory('./resources/app/customScripts/', 'customScripts/');
+        loadScriptDirectoryRecursive('./resources/app/modules/', 'modules/');
+        loadScriptDirectoryRecursive('./resources/app/customScripts/', 'customScripts/');
         loadStates();
     }
 
-    function loadScriptDirectory(readDirectory, includeDirectory) {
+    function loadScriptDirectoryRecursive(readDirectory, includeDirectory) {
         let allFiles = fs.readdirSync(readDirectory);
-
         for (let filePath of allFiles) {
             let filenameSplit = filePath.split(".");
 
-            let fileType = filenameSplit[1];
-            if (fileType === 'js') {
-                $.getScript(includeDirectory+filePath);
+            if (filenameSplit.length === 1) {
+                loadScriptDirectoryRecursive(readDirectory + filePath + '/', includeDirectory + filePath + '/');
+            } else if (filenameSplit.length > 1) {
+                let fileType = filenameSplit[filenameSplit.length-1];
+                if (fileType === 'js') {
+                    $.getScript(includeDirectory+filePath);
+                }
             }
         }
-
     }
 
     function loadStates() {
