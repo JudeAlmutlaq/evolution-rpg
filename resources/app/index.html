@@ -52,7 +52,10 @@
             } else if (filenameSplit.length > 1) {
                 let fileType = filenameSplit[filenameSplit.length-1];
                 if (fileType === 'js') {
-                    $.getScript(includeDirectory+filePath);
+                    $.ajax(includeDirectory+filePath, {
+                        dataType: "script",
+                        async: false
+                    });
                 }
             }
         }
