@@ -52,7 +52,6 @@ class OverworldFunctions extends MenuFunctions {
         if (this.inventoryGroup.visible === false ){
             this.inventoryGroup.visible = true;
             game.world.bringToTop(this.inventoryGroup);
-            console.log('yes');
             for (var i in world.inventory){
                 let x = i%8;
                 let y = Math.floor(i/8);
@@ -67,7 +66,6 @@ class OverworldFunctions extends MenuFunctions {
                 world.inventory[i].itemSprite.destroy();
                 world.inventory[i].itemSprite = null;
             }
-            console.log('no');
         }
     }
 
@@ -90,12 +88,9 @@ class OverworldFunctions extends MenuFunctions {
     pickUp(){
         for (var i in this.pickUpItems){
             if (this.pickUpItems[i].itemSprite && this.player.overlap(this.pickUpItems[i].itemSprite)){
-                console.log(this.pickUpItems[i]);
-                console.log([i]);
                 this.pickUpItems[i].itemSprite.destroy();
                 this.pickUpItems[i].itemSprite = null;
                 world.inventory.push(this.pickUpItems[i]);
-                console.log(world.inventory);
             }
 
         }
@@ -103,7 +98,6 @@ class OverworldFunctions extends MenuFunctions {
 
     layerToGrid(layer){
         let grid = [];
-        console.log(layer);
         for (let x = 0; x < layer.width; x++){
             grid.push([]);
             for (let y = 0; y < layer.height; y++){
@@ -123,7 +117,6 @@ class OverworldFunctions extends MenuFunctions {
     setUpMap(file) {
         var jsondata = fs.readFileSync(file);
         this.mapInfo = JSON.parse(jsondata);
-        console.log(this.mapInfo);
 
 
         var data = this.layerToGrid(this.mapInfo.layers[0]);
@@ -191,7 +184,6 @@ class OverworldFunctions extends MenuFunctions {
     }
 
     openDoor (doorBody, playerBody) {
-        this.music.stop();
 
         for (var i in this.doorTransition) {
             let transition = this.doorTransition[i];
@@ -214,9 +206,10 @@ class OverworldFunctions extends MenuFunctions {
         }
         let encounterZone = this.findEncounterZone();
         if (world.region){
-            let possibleEncounters = world.encounterList[world.region][encounterZone];
-            if (possibleEncounters){
+            if (world.encounterList[world.region][encounterZone]){
+                let possibleEncounters = world.encounterList[world.region][encounterZone].possibleEncounters;
                 world.currentEncounterCreatures = this.randomizeEncounter(possibleEncounters);
+                world.currentEncounterBattleBack = world.encounterList[world.region][encounterZone].battleBack;
                 game.state.start("GrasslandBattle1");
             }
         }

@@ -2,8 +2,8 @@
 class State {
 
     preload() {
-        game.load.image('jungle_1', 'images/backgrounds/Jungle_1.png');
-        game.load.image('button', 'images/button.png');
+        game.load.image('jungle_1', 'images/jungleVector.png');
+        game.load.image('button', 'images/startButton.png');
         game.load.image('exitButton', 'images/exitButton.png');
         game.load.audio('openingMusic', ['audio/openingMusic.ogg']);
     };
@@ -18,9 +18,6 @@ class State {
         this.jungle = game.add.sprite(game.camera.width/2, game.camera.height/2, 'jungle_1');
 
         this.jungle.anchor.setTo(0.5);
-
-        this.jungle.scale.x = 1.5;
-        this.jungle.scale.y = 1.5;
 
         this.button = game.add.image(game.camera.width/2, game.camera.height/2, 'button' );
         this.button.anchor.setTo(0.5);

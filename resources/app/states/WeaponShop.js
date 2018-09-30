@@ -75,6 +75,8 @@ class State extends OverworldFunctions {
 
         let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         enterKey.onUp.add(this.openShopMenu, this);
+
+        game.input.mouse.mouseWheelCallback = this.scrollInventory.bind(this);
     };
 
     update() {
@@ -89,6 +91,8 @@ class State extends OverworldFunctions {
             if (this.shopGroup){
                this.destroyShopMenu();
             }else {
+                this.inventoryScroll = 0;
+                this.shopScroll = 0;
                 this.createShopMenu();
             }
 
@@ -145,19 +149,23 @@ class State extends OverworldFunctions {
         this.shopGroup.create(game.camera.width/2+45, 37,'inventoryMenuContainer');
 
         for (let i in world.weaponShopItems){
-            let itemBar = this.displayItem(game.camera.width/2-250, i*48+100, world.weaponShopItems[i]);
-            itemBar.inputEnabled = true;
-            itemBar.events.onInputDown.add(this.buyItem, this, 0, world.weaponShopItems[i], i);
+            if (i >= this.shopScroll && i < this.shopScroll+8){
+                let itemBar = this.displayItem(game.camera.width/2-250, (i-this.shopScroll)*48+100, world.weaponShopItems[i]);
+                itemBar.inputEnabled = true;
+                itemBar.events.onInputDown.add(this.buyItem, this, 0, world.weaponShopItems[i], i);
+            }
         }
         for (let i in world.inventory){
-            let itemBar = this.displayItem(game.camera.width/2+50, i*48+100, world.inventory[i]);
-            itemBar.inputEnabled = true;
-            itemBar.events.onInputDown.add(this.sellItem, this, 0, world.inventory[i], i);
+            if (i >= this.inventoryScroll && i < this.inventoryScroll+8){
+                let itemBar = this.displayItem(game.camera.width/2+50, (i-this.inventoryScroll)*48+100, world.inventory[i]);
+                itemBar.inputEnabled = true;
+                itemBar.events.onInputDown.add(this.sellItem, this, 0, world.inventory[i], i);
+            }
         }
         this.goldTextStyle = { font: "15px Arial", fill: "#af8f00", align: "center" };
-        this.inventoryGold = game.add.text(game.camera.width/2+245, 324, world.playerGold, this.goldTextStyle, this.shopGroup);
+        this.inventoryGold = game.add.text(game.camera.width/2+245, 510, world.playerGold, this.goldTextStyle, this.shopGroup);
         this.inventoryGold.anchor.setTo(1);
-        this.shopGold = game.add.text(game.camera.width/2-55, 324, world.weaponShopGold, this.goldTextStyle, this.shopGroup);
+        this.shopGold = game.add.text(game.camera.width/2-55, 510, world.weaponShopGold, this.goldTextStyle, this.shopGroup);
         this.shopGold.anchor.setTo(1);
     }
 
@@ -184,6 +192,27 @@ class State extends OverworldFunctions {
         this.talkPromptText = null;
 
     }
+
+    scrollInventory (event){
+        if (game.input.y < 50 || game.input.y > 510){
+            return
+        }
+        if (game.input.x > 385 && game.input.x < 595){
+            this.shopScroll+=event.deltaY/100;
+            if (this.shopScroll < 0){
+                this.shopScroll = 0;
+            }
+        }
+        if (game.input.x > 685 && game.input.x < 895){
+            this.inventoryScroll+=event.deltaY/100;
+            if (this.inventoryScroll < 0){
+                this.inventoryScroll = 0;
+            }
+        }
+        this.remakeShopMenu();
+
+    }
+
 }
 
 
