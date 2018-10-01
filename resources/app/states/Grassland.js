@@ -8,6 +8,11 @@ class State extends OverworldFunctions{
             {x: 32, y: 0, state: 'Town', newX:23, newY:57},
 
         ];
+        this.pickUpItems = [
+            {...world.itemList.yellowFlower, x:28, y:3},
+            {...world.itemList.pinkFlower, x:39, y:3},
+            {...world.itemList.blueLeaves, x:33, y:9},
+        ]
     }
 
     preload() {
@@ -15,6 +20,10 @@ class State extends OverworldFunctions{
         world.region = "Grassland";
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
+
+        game.load.image('yellowFlower', 'images/yellowFlower.png');
+        game.load.image('pinkFlower', 'images/pinkFlower.png');
+        game.load.image('blueLeaves', 'images/blueLeaves.png');
 
         game.load.tilemap('grassland', 'images/grassland.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('grassTiles', 'images/GLtownTiles.png');
@@ -69,6 +78,9 @@ class State extends OverworldFunctions{
         this.setUpMap('./resources/app/images/grassland.json');
 
         this.layers = [this.layer0,this.layer1,this.layer2, this.layer3, this.layer4];
+
+        let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+        enterKey.onUp.add(this.pickUp, this);
 
     };
 

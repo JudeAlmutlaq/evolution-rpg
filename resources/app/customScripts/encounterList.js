@@ -3,10 +3,10 @@ world.encounterList = {
         7: {possibleEncounters: [
             {
                 creatures: [
-                    {name: "elephant", x: 0, y: 0, width:300},
-                    {name: "elephant", x: 300, y:300, width:300},
+                    {name: "redFox", x: 100, y: 100, width:200},
+                    {name: "redFox", x: 350, y:350, width:200},
                 ],
-                weight: 20,
+                weight: 100,
             },
             {
                 creatures: [
