@@ -5,7 +5,6 @@ class State extends OverworldFunctions {
     }
 
     preload() {
-
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
         game.load.tilemap('grassland', 'images/GLWeaponShop.json', null, Phaser.Tilemap.TILED_JSON);
