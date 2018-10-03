@@ -6,7 +6,7 @@ class State extends OverworldFunctions{
     init(){
         this.doorTransition = [
             //{ x:37, y:37, state:'PlantShop'},
-            //{ x:20, y:29, state:'Inn'},
+            { x:39, y:19, state:'ScienceShop'},
             { x:20, y:29, state:'WeaponShop'},
             { x:23, y:59, state:'Grassland', newX:32, newY:1},
 
