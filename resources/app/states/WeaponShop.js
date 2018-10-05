@@ -10,8 +10,7 @@ class State extends OverworldFunctions {
         game.load.tilemap('grassland', 'images/GLWeaponShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('weaponTiles', 'images/interiorTiles.png');
 
-        game.load.spritesheet('door', 'images/door.png', 32, 32, 12);
-        game.load.image('doorSprite', 'images/doorSprite.png');
+        game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
 
         game.load.image('redWall', 'images/RED.png');
 

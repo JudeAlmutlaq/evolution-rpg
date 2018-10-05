@@ -2,14 +2,18 @@
 class State {
 
     preload() {
-        game.load.image('jungle_1', 'images/jungleVector.png');
+        game.load.image('jungle_1', 'images/openingGraphics.png');
         game.load.image('button', 'images/startButton.png');
         game.load.image('exitButton', 'images/exitButton.png');
         game.load.audio('openingMusic', ['audio/openingMusic.ogg']);
+
+        game.load.image('barBackground', 'images/load_bar_bg.png');
+        game.load.image('staminaBar', 'images/load_bar_1.png');
+        game.load.image('hungerBar', 'images/load_bar_2.png');
+        game.load.image('healthBar', 'images/load_bar_3.png');
     };
 
     create() {
-
         this.music = game.add.audio('openingMusic');
         //this.music.play();
 
@@ -43,6 +47,11 @@ function newGame() {
     world.playerY = 31;
     world.playerPixelX = world.playerX*32+16;
     world.playerPixelY = world.playerY*32+16;
+
+    world.player = {};
+    world.player.stamina = 1;
+    world.player.health = 1;
+    world.player.hunger = 0;
 
     game.state.start('Town');
     //this.music.stop();

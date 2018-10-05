@@ -1,7 +1,8 @@
 class State extends MenuFunctions {
     preload() {
 
-        game.load.image('grassBattleBack', 'images/GrasslandBattleBackground.png');
+        game.load.image('grassBattleBack', 'images/simpleBackground.png');
+
         game.load.image ('cowBrown', 'images/creatures/Cow.png');
         game.load.image ('cowBlack', 'images/creatures/BlackCow.png');
         game.load.image ('brownHorse', 'images/creatures/brownHorse.png');
@@ -10,6 +11,8 @@ class State extends MenuFunctions {
         game.load.image ('armadillo', 'images/creatures/armadillo.png');
         game.load.image ('hyena', 'images/creatures/hyena.png');
         game.load.image ('lioness', 'images/creatures/lioness.png');
+        game.load.image ('redFox', 'images/creatures/redFox.png');
+
         game.load.image('playerLeft', 'images/playerLeft2.png');
         game.load.image ('brownLlama', 'images/creatures/brownLlama.png');
         game.load.image('captureButton', 'images/CaptureButton.png');
@@ -37,7 +40,7 @@ class State extends MenuFunctions {
             creatureSprite.width=creature.width;
             creatureSprite.scale.set(creatureSprite.scale.x);
         }
-        this.playerLeft = this.grasslandBattleGraphics.create(900, 300, 'playerLeft');
+        this.playerLeft = this.grasslandBattleGraphics.create(900, 450, 'playerLeft');
         this.playerLeft.scale.set(.5);
 
         let buttons = [
@@ -46,7 +49,7 @@ class State extends MenuFunctions {
         ];
 
         for (let i = 0; i < buttons.length; i++){
-            this.captureButton = this.grasslandBattleGraphics.create(900, 400+i*100, 'captureButton');
+            this.captureButton = this.grasslandBattleGraphics.create(1050, 400+i*100, 'captureButton');
             this.captureButton.scale.set(.25);
             this.captureButton.inputEnabled = true;
             this.captureButton.events.onInputOver.add(this.buttonHighlight, this, 0, i);

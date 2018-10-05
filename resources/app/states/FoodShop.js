@@ -1,44 +1,47 @@
-class State extends OverworldFunctions {
+class State extends OverworldFunctions{
     preload() {
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.tilemap('innGraphic', 'images/GLinn.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('innTiles', 'images/interiorTiles.png');
+        game.load.tilemap('foodShopGraphic', 'images/foodShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('foodTiles', 'images/interiorTiles.png');
 
-        game.load.spritesheet('innKeeper', 'images/innKeeper.png', 32, 32, 12);
+        game.load.spritesheet('foodDealer', 'images/grasslandTown/foodChar.png', 32, 32, 12);
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
+
     };
 
     create() {
-        this.innGraphics = game.add.group();
+        this.foodShopGraphics = game.add.group();
 
         game.stage.backgroundColor = "#000000";
 
-        this.inn = game.add.tilemap('innGraphic');
-        this.inn.addTilesetImage('interiorTiles', 'innTiles');
+        this.foodShop = game.add.tilemap('foodShopGraphic');
+        this.foodShop.addTilesetImage('interiorTiles', 'foodTiles');
 
-        this.layer0 = this.inn.createLayer('floor', 832, 384);
+        this.layer0 = this.foodShop.createLayer('floor', 544, 416);
         this.layer0.resizeWorld();
-        this.layer1 = this.inn.createLayer('furniture', 832, 384);
-        this.innGraphics.add(this.layer0);
-        this.innGraphics.add(this.layer1);
+        this.layer1 = this.foodShop.createLayer('furniture', 544, 416);
+        this.layer2 = this.foodShop.createLayer('food', 544, 416);
+        this.foodShopGraphics.add(this.layer0);
+        this.foodShopGraphics.add(this.layer1);
+        this.foodShopGraphics.add(this.layer2);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        this.innKeeper = this.innGraphics.create(176, 176,'innKeeper');
-        this.innKeeper.frame = 1;
-        game.physics.p2.enable(this.innKeeper);
-        this.innKeeper.body.setCollisionGroup(this.wallsCollisionGroup);
-        this.innKeeper.body.collides(this.playerCollisionGroup);
-        this.innKeeper.body.static = true;
+        this.foodDealer = this.foodShopGraphics.create(272, 112,'foodDealer');
+        this.foodDealer.frame = 1;
+        game.physics.p2.enable(this.foodDealer);
+        this.foodDealer.body.setCollisionGroup(this.wallsCollisionGroup);
+        this.foodDealer.body.collides(this.playerCollisionGroup);
+        this.foodDealer.body.static = true;
 
         this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.player = this.innGraphics.create(176, 336, 'player');
+        this.player = this.foodShopGraphics.create(272, 368, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
@@ -48,20 +51,20 @@ class State extends OverworldFunctions {
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
         this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
-        this.setUpMap('./resources/app/images/GLinn.json');
+        this.setUpMap('./resources/app/images/foodShop.json');
 
-        this.door = this.innGraphics.create(176, 368, 'door');
+        this.door = this.foodShopGraphics.create(272, 400, 'door');
         this.door.anchor.setTo(0.5);
         game.physics.p2.enable(this.door);
         this.door.body.setCollisionGroup(this.doorCollisionGroup);
         this.door.body.collides(this.playerCollisionGroup, this.toTown, this);
         this.door.body.static = true;
 
-        this.innGraphics.fullScreen();
+        this.foodShopGraphics.fullScreen();
     };
 
     update() {
-
+      
     };
     toTown () {
         game.state.start('Town', true, false, 37, 38);

@@ -5,10 +5,15 @@ class State extends OverworldFunctions{
 
     init(){
         this.doorTransition = [
-            //{ x:37, y:37, state:'PlantShop'},
+            { x:37, y:37, state:'HerbShop'},
             { x:39, y:19, state:'ScienceShop'},
             { x:20, y:29, state:'WeaponShop'},
+            { x:35, y:8, state:'Inn'},
             { x:23, y:59, state:'Grassland', newX:32, newY:1},
+            { x:11, y:0, state:'OutsideHome'},
+            { x:11, y:15, state:'MedicalShop'},
+            { x:8, y:43, state:'AnimalShop'},
+            { x:39, y:47, state:'FoodShop'},
 
         ];
         this.pickUpItems = [

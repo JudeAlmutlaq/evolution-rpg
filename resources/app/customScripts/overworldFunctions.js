@@ -22,6 +22,12 @@ class OverworldFunctions extends MenuFunctions {
         this.talkCollisionGroup = game.physics.p2.createCollisionGroup();
     }
 
+    postCreate__statBars (){
+        console.log('Stat Bars');
+        this.drawStats();
+
+    }
+
     postCreate__setCollisions(){
 
         this.player.body.setCollisionGroup(this.playerCollisionGroup);
@@ -275,6 +281,51 @@ class OverworldFunctions extends MenuFunctions {
         }else {
             this.player.animations.stop();
         }
+
+    }
+
+    update__statBars (){
+        this.staminaBar.cropRect.width = this.statBarWidth*world.player.stamina;
+        this.staminaBar.updateCrop();
+
+        this.healthBar.cropRect.width = this.statBarWidth*world.player.health;
+        this.healthBar.updateCrop();
+
+        this.hungerBar.cropRect.width = this.statBarWidth*world.player.hunger;
+        this.hungerBar.updateCrop();
+
+    }
+
+    update__stats(){
+        world.player.hunger += .001;
+        if (world.player.hunger >= .8) {
+            world.player.stamina -= .001
+        }
+        if (world.player.stamina <= .2) {
+            world.player.health -= .001
+        }
+    }
+
+    drawStats (){
+        this.statBars = game.add.group();
+
+        this.statBars.create(10,625, 'barBackground');
+        this.staminaBar = this.statBars.create(13,628, 'staminaBar');
+        this.statBarWidth = this.staminaBar.width;
+        let staminaRectangle = new Phaser.Rectangle(0,0,this.staminaBar.width*world.player.stamina,this.staminaBar.height);
+        this.staminaBar.crop (staminaRectangle);
+
+        this.statBars.create(10,655, 'barBackground');
+        this.healthBar = this.statBars.create(13,658, 'healthBar');
+        let healthRectangle = new Phaser.Rectangle(0,0,this.healthBar.width*world.player.health,this.healthBar.height);
+        this.healthBar.crop (healthRectangle);
+
+        this.statBars.create(10,685, 'barBackground');
+        this.hungerBar = this.statBars.create(13,688, 'hungerBar');
+        let hungerRectangle = new Phaser.Rectangle(0,0,this.hungerBar.width*world.player.hunger,this.hungerBar.height);
+        this.hungerBar.crop (hungerRectangle);
+
+        this.statBars.fixedToCamera = true;
 
     }
 }
