@@ -21,9 +21,9 @@ class State extends OverworldFunctions{
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.image('yellowFlower', 'images/yellowFlower.png');
-        game.load.image('pinkFlower', 'images/pinkFlower.png');
-        game.load.image('blueLeaves', 'images/blueLeaves.png');
+        game.load.image('yellowFlower', 'images/herbs/yellowFlower.png');
+        game.load.image('pinkFlower', 'images/herbs/pinkFlower.png');
+        game.load.image('blueLeaves', 'images/herbs/blueLeaves.png');
 
         game.load.tilemap('grassland', 'images/grassland.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('grassTiles', 'images/GLtownTiles.png');

@@ -5,7 +5,7 @@ class State extends OverworldFunctions {
         game.load.tilemap('herbShopGraphic', 'images/HerbShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('herbTiles', 'images/interiorTiles.png');
 
-        game.load.spritesheet('herbDealer', 'images/herbChar.png', 32, 32, 12);
+        game.load.spritesheet('herbDealer', 'images/grasslandTown/herbChar.png', 32, 32, 12);
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
     };

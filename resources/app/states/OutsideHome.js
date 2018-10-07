@@ -1,11 +1,20 @@
 class State extends OverworldFunctions{
 
+    init(){
+        this.doorTransition = [
+            //{ x:37, y:37, state:'HerbShop'},
+            //{ x:39, y:19, state:'ScienceShop'},
+        ];
+    }
+
     preload() {
         game.load.tilemap('outsideHome', 'images/outsidehome.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('outsideHomeTiles', 'images/GLtownTiles.png');
 
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
         game.load.image('redWall', 'images/RED.png');
+
+        game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
 
     };
 
@@ -32,7 +41,7 @@ class State extends OverworldFunctions{
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.player = this.outsideHomeGraphics.create(240, 400, 'player');
+        this.player = this.outsideHomeGraphics.create(240, 368, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
@@ -47,15 +56,21 @@ class State extends OverworldFunctions{
 
         this.setUpMap('./resources/app/images/outsideHome.json');
 
-        //this.layers = [this.layer0,this.layer1,this.layer2];
-
-
-
+        this.door = this.outsideHomeGraphics.create(240, 239, 'door');
+        this.door.anchor.setTo(0.5);
+        game.physics.p2.enable(this.door);
+        this.door.body.setCollisionGroup(this.doorCollisionGroup);
+        this.door.body.collides(this.playerCollisionGroup, this.toHome, this);
+        this.door.body.static = true;
     };
 
     update() {
       
     };
+    toHome () {
+        game.state.start('Home', true, false, 1, 1);
+
+    }
 }
 
 module.exports = {

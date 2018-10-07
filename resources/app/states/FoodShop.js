@@ -30,7 +30,7 @@ class State extends OverworldFunctions{
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        this.foodDealer = this.foodShopGraphics.create(272, 112,'foodDealer');
+        this.foodDealer = this.foodShopGraphics.create(272, 144,'foodDealer');
         this.foodDealer.frame = 1;
         game.physics.p2.enable(this.foodDealer);
         this.foodDealer.body.setCollisionGroup(this.wallsCollisionGroup);

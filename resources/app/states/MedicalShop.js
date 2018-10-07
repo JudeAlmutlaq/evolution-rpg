@@ -2,10 +2,10 @@ class State extends OverworldFunctions{
     preload() {
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.tilemap('medicalShopGraphic', 'images/medicalShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('medicalShopGraphic', 'images/grasslandTown/medicalShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('medicalTiles', 'images/interiorTiles.png');
 
-        game.load.spritesheet('nurse', 'images/medicalChar.png', 32, 32, 12);
+        game.load.spritesheet('nurse', 'images/grasslandTown/medicalChar.png', 32, 32, 12);
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
     };
@@ -50,7 +50,7 @@ class State extends OverworldFunctions{
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
         this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
-        this.setUpMap('./resources/app/images/medicalShop.json');
+        this.setUpMap('./resources/app/images/grasslandTown/medicalShop.json');
 
         this.door = this.medicalShopGraphics.create(144, 400, 'door');
         this.door.anchor.setTo(0.5);

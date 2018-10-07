@@ -7,14 +7,14 @@ class State extends OverworldFunctions {
     preload() {
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.tilemap('grassland', 'images/GLWeaponShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('grassland', 'images/grasslandTown/weaponShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('weaponTiles', 'images/interiorTiles.png');
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
 
         game.load.image('redWall', 'images/RED.png');
 
-        game.load.spritesheet('weaponDealer', 'images/GLWeaponsDealer.png', 32, 32, 12);
+        game.load.spritesheet('weaponDealer', 'images/grasslandTown/weaponChar.png', 32, 32, 12);
 
         game.load.image('weaponShopMenu', 'images/weaponShopMenu.png');
         game.load.image('sword', 'images/weapons/sword.png');
@@ -67,7 +67,7 @@ class State extends OverworldFunctions {
         this.door.body.collides(this.playerCollisionGroup, this.toTown, this);
         this.door.body.static = true;
 
-        this.setUpMap('./resources/app/images/GLWeaponShop.json');
+        this.setUpMap('./resources/app/images/grasslandTown/weaponShop.json');
 
         this.weaponShopGraphics.fullScreen();
 
