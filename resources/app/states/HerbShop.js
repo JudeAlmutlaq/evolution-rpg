@@ -2,7 +2,7 @@ class State extends OverworldFunctions {
     preload() {
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.tilemap('herbShopGraphic', 'images/gasslandTown/HerbShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('herbShopGraphic', 'images/grasslandTown/HerbShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('herbTiles', 'images/interiorTiles.png');
 
         game.load.spritesheet('herbDealer', 'images/grasslandTown/herbChar.png', 32, 32, 12);
