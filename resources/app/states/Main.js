@@ -2,7 +2,7 @@
 class State {
 
     preload() {
-        game.load.image('jungle_1', 'images/openingGraphics.png');
+        game.load.image('openingGraphics', 'images/backgrounds/openingGraphics.png');
         game.load.image('button', 'images/startButton.png');
         game.load.image('exitButton', 'images/exitButton.png');
         game.load.audio('openingMusic', ['audio/openingMusic.ogg']);
@@ -19,9 +19,7 @@ class State {
 
         game.stage.backgroundColor = "#0d2b00";
 
-        this.jungle = game.add.sprite(game.camera.width/2, game.camera.height/2, 'jungle_1');
-
-        this.jungle.anchor.setTo(0.5);
+        this.openingGraphics = game.add.sprite(0, 0, 'openingGraphics');
 
         this.button = game.add.image(game.camera.width/2, game.camera.height/2, 'button' );
         this.button.anchor.setTo(0.5);

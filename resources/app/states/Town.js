@@ -52,7 +52,6 @@ class State extends OverworldFunctions{
 
         game.load.image('swordWood', 'images/weapons/swordWood.png');
         game.load.image('sword', 'images/weapons/sword.png');
-        game.load.image('cowBrown', 'images/creatures/cow.png');
         game.load.image('animalPen', 'images/animalPenPen.png');
     };
 
@@ -83,10 +82,6 @@ class State extends OverworldFunctions{
         this.down = this.player.animations.add('down', [0, 1, 2], 10, true);
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
         this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
-
-        //door = game.add.sprite(0, 0, 'door');
-        //door.alpha = 0;
-        //doorAnim = door.animations.add('doorAnim', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
 
         game.camera.follow(this.player);
 

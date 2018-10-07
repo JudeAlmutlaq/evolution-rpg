@@ -51,7 +51,7 @@ class State extends OverworldFunctions{
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
         this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
-        game.camera.follow(this.player);
+        //game.camera.follow(this.player);
         this.player.body.collideWorldBounds = true;
 
         this.setUpMap('./resources/app/images/outsideHome.json');
@@ -62,6 +62,13 @@ class State extends OverworldFunctions{
         this.door.body.setCollisionGroup(this.doorCollisionGroup);
         this.door.body.collides(this.playerCollisionGroup, this.toHome, this);
         this.door.body.static = true;
+
+        this.farmExit = this.outsideHomeGraphics.create(464, 176, 'redWall');
+        this.farmExit.anchor.setTo(0.5);
+        game.physics.p2.enable(this.farmExit);
+        this.farmExit.body.setCollisionGroup(this.doorCollisionGroup);
+        this.farmExit.body.collides(this.playerCollisionGroup, this.toFarm, this);
+        this.farmExit.body.static = true;
     };
 
     update() {
@@ -69,6 +76,10 @@ class State extends OverworldFunctions{
     };
     toHome () {
         game.state.start('Home', true, false, 1, 1);
+
+    }
+    toFarm () {
+        game.state.start('Farm', true, false, 1, 1);
 
     }
 }

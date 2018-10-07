@@ -1,7 +1,14 @@
 class State extends MenuFunctions {
     preload() {
 
-        game.load.image('grassBattleBack', 'images/simpleBackground.png');
+        game.load.image('shortGrass', 'images/backgrounds/shortGrass.png');
+        game.load.image('tallGrass', 'images/backgrounds/tallGrass.png');
+
+        game.load.image('redFox', 'images/creatures/mammals/redFox.png');
+        game.load.image('armadillo', 'images/creatures/mammals/armadillo.png');
+        game.load.image('brownBunny', 'images/creatures/mammals/brownBunny.png');
+        game.load.image('brownAntelopeMale', 'images/creatures/mammals/brownAntelopeMale.png');
+        game.load.image('brownAntelopeFemale', 'images/creatures/mammals/brownAntelopeFemale.png');
 
         game.load.image('playerLeft', 'images/playerLeft2.png');
         game.load.image('captureButton', 'images/CaptureButton.png');
