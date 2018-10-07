@@ -2,7 +2,7 @@ class State extends OverworldFunctions{
     preload() {
         game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
-        game.load.tilemap('foodShopGraphic', 'images/foodShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('foodShopGraphic', 'images/grasslandTown/foodShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('foodTiles', 'images/interiorTiles.png');
 
         game.load.spritesheet('foodDealer', 'images/grasslandTown/foodChar.png', 32, 32, 12);
@@ -51,7 +51,7 @@ class State extends OverworldFunctions{
         this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
         this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
 
-        this.setUpMap('./resources/app/images/foodShop.json');
+        this.setUpMap('./resources/app/images/grasslandTown/foodShop.json');
 
         this.door = this.foodShopGraphics.create(272, 400, 'door');
         this.door.anchor.setTo(0.5);
