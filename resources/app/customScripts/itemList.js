@@ -14,7 +14,7 @@ world.itemList = {
     blueLeaves:   {itemType: 'herb', spriteName:'blueLeaves', displayName:'Blue Leaves', speed: 0, cost: 20},
     animalPen:    {itemType: 'pen', spriteName:'animalPen', displayName:'Animal Pen', speed: 0, cost: 20},
     whiteTooth:   {itemType: 'creatureLoot', spriteName:'whiteTooth', displayName:'White Tooth', speed: 0, cost: 20},
-    corn:         {itemType: 'food', spriteName:'corn', displayName:'corn', speed: 0, cost: 5},
+    corn:         {itemType: 'food', spriteName:'corn', displayName:'corn', nutrition: .5, cost: 5},
 };
 
 

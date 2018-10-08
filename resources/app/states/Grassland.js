@@ -50,7 +50,7 @@ class State extends OverworldFunctions{
         this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
         this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
-        this.player = game.add.sprite(world.playerPixelX, world.playerPixelY, 'player');
+        this.player = game.add.sprite(world.playerOverworldlX, world.playerOverworldY, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;

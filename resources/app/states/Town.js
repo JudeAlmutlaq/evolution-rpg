@@ -14,13 +14,14 @@ class State extends OverworldFunctions{
             { x:11, y:15, state:'MedicalShop'},
             { x:8, y:43, state:'AnimalShop'},
             { x:39, y:47, state:'FoodShop'},
-
         ];
+
         this.pickUpItems = [
             //{x:28, y:29, spriteName:'swordWood', displayName:'woodenSword', attack:3, cost: 25},
             {x:35, y:32, spriteName:'sword', displayName:'Sword', attack:50, cost: 200},
             {...world.itemList.swordWood, x:28, y:29, cost:25},
             {...world.itemList.animalPen, x:29, y:29},
+            {...world.itemList.corn, x:35, y:35},
         ]
 
     }
@@ -34,6 +35,7 @@ class State extends OverworldFunctions{
 
         game.load.tilemap('town', 'images/GLtown.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('townTiles', 'images/GLtowntiles.png');
+        game.load.image('corn', 'images/food/corn.png');
 
         game.load.image('redWall', 'images/RED.png');
 
@@ -70,27 +72,16 @@ class State extends OverworldFunctions{
         this.layers.push(this.town.createLayer('signs_windows'));
         this.layers.push(this.town.createLayer('tree_tops'));
 
-
-        this.player = game.add.sprite(world.playerPixelX, world.playerPixelY, 'player');
-        this.player.anchor.setTo(0.5);
-        game.physics.p2.enable(this.player);
-        this.player.body.fixedRotation = true;
-
-        game.world.bringToTop(this.layers[3]);
-
-        this.up = this.player.animations.add('up', [9, 10, 11], 10, true);
-        this.down = this.player.animations.add('down', [0, 1, 2], 10, true);
-        this.left = this.player.animations.add('left', [3, 4, 5], 10, true);
-        this.right = this.player.animations.add('right', [6, 7, 8], 10, true);
-
-        game.camera.follow(this.player);
-
         let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         enterKey.onUp.add(this.pickUp, this);
 
         this.setUpMap('./resources/app/images/GLtown.json');
 
     };
+
+    postCreate__orderLayers() {
+        game.world.bringToTop(this.layers[3]);
+    }
 
     update() {
     };

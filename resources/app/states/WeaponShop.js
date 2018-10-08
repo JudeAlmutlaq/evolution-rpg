@@ -1,11 +1,11 @@
 
-class State extends OverworldFunctions {
+class State extends ShopFunctions {
 
     init(){
     }
 
     preload() {
-        game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
+       // game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
 
         game.load.tilemap('grassland', 'images/grasslandTown/weaponShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('weaponTiles', 'images/interiorTiles.png');
@@ -44,10 +44,6 @@ class State extends OverworldFunctions {
 
         this.weaponDealer = this.weaponShopGraphics.create(256, 96,'weaponDealer');
         this.weaponDealer.frame = 1;
-
-        this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
-        this.wallsCollisionGroup = game.physics.p2.createCollisionGroup();
-        this.doorCollisionGroup = game.physics.p2.createCollisionGroup();
 
         this.player = this.weaponShopGraphics.create(336, 430, 'player');
         this.player.anchor.setTo(0.5);

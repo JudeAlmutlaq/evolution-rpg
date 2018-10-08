@@ -1,0 +1,3 @@
+class ShopFunctions extends MovementFunctions {
+
+}

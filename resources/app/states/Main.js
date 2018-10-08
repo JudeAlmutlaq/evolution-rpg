@@ -43,8 +43,8 @@ class State {
 function newGame() {
     world.playerX = 28;
     world.playerY = 31;
-    world.playerPixelX = world.playerX*32+16;
-    world.playerPixelY = world.playerY*32+16;
+    world.playerOverworldX = world.playerX*32+16;
+    world.playerOverworldY = world.playerY*32+16;
 
     world.player = {};
     world.player.stamina = 1;
