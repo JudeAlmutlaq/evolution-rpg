@@ -21,7 +21,8 @@ class MovementFunctions extends MenuFunctions {
     }
 
     create__player (){
-        this.player = game.add.sprite(world.playerOverworldX, world.playerOverworldY, 'player');
+        let position = this.getPlayerPosition();
+        this.player = game.add.sprite(position.x, position.y, 'player');
         this.player.anchor.setTo(0.5);
         game.physics.p2.enable(this.player);
         this.player.body.fixedRotation = true;
@@ -35,7 +36,6 @@ class MovementFunctions extends MenuFunctions {
     }
 
     postCreate__setCollisions(){
-
         this.player.body.setCollisionGroup(this.playerCollisionGroup);
         this.player.body.collides([this.wallsCollisionGroup, this.doorCollisionGroup, this.talkCollisionGroup]);
 
@@ -109,6 +109,10 @@ class MovementFunctions extends MenuFunctions {
             }
         }
     }
+
+    talkPrompt(){};
+    removeTalkPrompt(){};
+    getPlayerPosition(){};
 
     layerToGrid(layer){
         let grid = [];

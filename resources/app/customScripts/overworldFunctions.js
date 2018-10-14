@@ -17,9 +17,11 @@ class OverworldFunctions extends MovementFunctions {
             let sprite = game.add.sprite(item.x*32+16, item.y*32+16, item.spriteName);
             sprite.anchor.set(0.5);
             this.pickUpItems[i].itemSprite = sprite;
-
-
         }
+    }
+
+    getPlayerPosition() {
+        return {x: world.playerOverworldX, y: world.playerOverworldY};
     }
 
     pickUp(){
