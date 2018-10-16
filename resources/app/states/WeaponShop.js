@@ -5,49 +5,46 @@ class State extends ShopFunctions {
     }
 
     preload() {
-       // game.load.spritesheet('player', 'images/playerChar.png', 32, 32, 12);
-
-        game.load.tilemap('grassland', 'images/grasslandTown/weaponShop.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('weaponTiles', 'images/interiorTiles.png');
+        game.load.tilemap('shop', 'images/grasslandTown/weaponShop.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('interiorTiles', 'images/interiorTiles.png');
 
         game.load.spritesheet('door', 'images/door.png', 32, 32, 9);
 
-        game.load.image('redWall', 'images/RED.png');
-
-        game.load.spritesheet('weaponDealer', 'images/grasslandTown/weaponChar.png', 32, 32, 12);
+        game.load.spritesheet('shopKeeper', 'images/grasslandTown/weaponChar.png', 32, 32, 12);
 
         game.load.image('weaponShopMenu', 'images/weaponShopMenu.png');
-        game.load.image('sword', 'images/weapons/sword.png');
-        game.load.image('swordWood', 'images/weapons/swordWood.png');
         game.load.image('weaponShopMenuContainer', 'images/weaponShopMenuContainer.png');
         game.load.image('inventoryMenuContainer', 'images/inventoryMenuContainer.png');
-        game.load.image ('cowBrown', 'images/creatures/Cow.png');
 
     };
 
     create() {
-
-        this.weaponShopGraphics = game.add.group();
+        this.shopGraphics = game.add.group();
 
         game.stage.backgroundColor = "#000000";
 
-        this.weaponShop = game.add.tilemap('grassland');
-        this.weaponShop.addTilesetImage('interiorTiles', 'weaponTiles');
-        this.layer0 = this.weaponShop.createLayer('floor_walls', 544, 480);
+        this.shop = game.add.tilemap('shop');
+        this.shop.addTilesetImage('interiorTiles', 'interiorTiles');
+
+        this.layer0 = this.shop.createLayer('ground', 544, 480);
         this.layer0.resizeWorld();
-        this.layer1 = this.weaponShop.createLayer('furniture', 544, 480);
-        this.weaponShopGraphics.add(this.layer0);
-        this.weaponShopGraphics.add(this.layer1);
+        this.layer1 = this.shop.createLayer('foreground1', 544, 480);
+        this.layer2 = this.shop.createLayer('foreground2', 544, 480);
+        this.layer3 = this.shop.createLayer('above', 544, 480);
+        this.shopGraphics.add(this.layer0);
+        this.shopGraphics.add(this.layer1);
+        this.shopGraphics.add(this.layer2);
+        this.shopGraphics.add(this.layer3);
 
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
 
-        this.weaponDealer = this.weaponShopGraphics.create(256, 96,'weaponDealer');
-        this.weaponDealer.frame = 1;
+        this.shopKeeper = this.shopGraphics.create(256, 96,'shopKeeper');
+        this.shopKeeper.frame = 1;
 
-        this.player = this.weaponShopGraphics.add(this.player);
+        this.player = this.shopGraphics.add(this.player);
 
-        this.door = this.weaponShopGraphics.create(336, 464, 'door');
+        this.door = this.shopGraphics.create(336, 464, 'door');
         this.door.anchor.setTo(0.5);
         game.physics.p2.enable(this.door);
         this.door.body.setCollisionGroup(this.doorCollisionGroup);
@@ -56,7 +53,7 @@ class State extends ShopFunctions {
 
         this.setUpMap('./resources/app/images/grasslandTown/weaponShop.json');
 
-        this.weaponShopGraphics.fullScreen();
+        this.shopGraphics.fullScreen();
 
         let enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         enterKey.onUp.add(this.openShopMenu, this);
@@ -170,7 +167,7 @@ class State extends ShopFunctions {
 
     talkPrompt () {
         let textStyle = { font: "50px Arial", fill: "#fff", align: "center" };
-        this.talkPromptText = game.add.text(266, 45, "!", textStyle, this.weaponShopGraphics);
+        this.talkPromptText = game.add.text(266, 45, "!", textStyle, this.shopGraphics);
     }
     removeTalkPrompt (){
         if (this.shopGroup){

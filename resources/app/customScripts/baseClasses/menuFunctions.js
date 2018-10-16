@@ -76,7 +76,7 @@ class MenuFunctions {
             for (var i in world.inventory){
                 let x = i%8;
                 let y = Math.floor(i/8);
-                let item = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].spriteName)
+                let item = this.inventoryGroup.create(x*128+100, y*128+280, world.inventory[i].spriteName);
                 world.inventory[i].itemSprite = item;
                 item.width = 96;
                 item.height = 96;
@@ -108,5 +108,6 @@ class MenuFunctions {
                 world.player.hunger = 0;
             }
         }
+
     }
 }
