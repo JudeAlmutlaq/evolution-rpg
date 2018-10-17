@@ -34,7 +34,8 @@ class State extends FarmFunctions {
         this.player.body.collideWorldBounds = true;
 
         this.setUpMap('./resources/app/images/farm.json');
-        
+
+        //this.objectGroup.bringToTop();
     };
 
     getPlayerPosition() {

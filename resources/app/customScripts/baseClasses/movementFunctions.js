@@ -53,6 +53,7 @@ class MovementFunctions extends MenuFunctions {
         var data = this.layerToGrid(this.mapInfo.layers[0]);
         this.encounterZone = this.layerToGrid(this.mapInfo.layers[1]);
 
+        this.currentTalkZones = 0;
         this.doorGroup = game.add.group();
 
         for (let x = 0; x < data.length; x++) {
@@ -102,11 +103,73 @@ class MovementFunctions extends MenuFunctions {
                     talkZone.body.setCollisionGroup(this.talkCollisionGroup);
                     talkZone.body.sensor = true;
                     talkZone.body.collides(this.playerCollisionGroup);
-                    talkZone.body.onBeginContact.add(this.talkPrompt, this);
-                    talkZone.body.onEndContact.add(this.removeTalkPrompt, this);
+
+                    talkZone.body.onBeginContact.add(this._talkPrompt, this);
+                    talkZone.body.onEndContact.add(this._removeTalkPrompt, this);
 
                 }
             }
+        }
+
+        this.objectGroup = game.add.group();
+
+        this.allObjectSprites = [];
+
+        let allObjects = this.mapInfo.layers[2].objects;
+        for (let object of allObjects){
+            let sprite = this.drawObject(object);
+            this.objectGroup.add(sprite);
+
+            sprite.customProperties = object.properties;
+            sprite.currentlyColliding = false;
+
+            this.allObjectSprites.push(sprite);
+        }
+    }
+
+    update__checkObjectOverlap() {
+        for (let object of this.allObjectSprites) {
+            if (this.player.overlap(object)) {
+                if (object.currentlyColliding === false) {
+                    this.beginObjectCollision(object.customProperties);
+                }
+                object.currentlyColliding = true;
+            } else {
+                if (object.currentlyColliding === true) {
+                    this.endObjectCollision(object.customProperties);
+                }
+                object.currentlyColliding = false;
+            }
+        }
+    }
+
+    beginObjectCollision(properties) {};
+    endObjectCollision(properties) {};
+
+    drawObject(dimensions) {
+        let graphic = game.add.graphics();
+        graphic.beginFill(0x000000, 1);
+        graphic.moveTo(dimensions.x, dimensions.y);
+        graphic.lineTo(dimensions.x+dimensions.width, dimensions.y);
+        graphic.lineTo(dimensions.x+dimensions.width, dimensions.y+dimensions.height);
+        graphic.lineTo(dimensions.x, dimensions.y+dimensions.height);
+        graphic.lineTo(dimensions.x, dimensions.y);
+        graphic.endFill();
+
+        return graphic;
+    }
+
+    _talkPrompt() {
+        if (this.currentTalkZones === 0) {
+            this.talkPrompt();
+        }
+        this.currentTalkZones++;
+    }
+
+    _removeTalkPrompt() {
+        this.currentTalkZones--;
+        if (this.currentTalkZones === 0) {
+            this.removeTalkPrompt();
         }
     }
 
