@@ -41,8 +41,8 @@ class State {
 }
 
 function newGame() {
-    world.playerX = 6;
-    world.playerY = 6;
+    world.playerX = 25;
+    world.playerY = 25;
     world.playerOverworldX = world.playerX*32+16;
     world.playerOverworldY = world.playerY*32+16;
 

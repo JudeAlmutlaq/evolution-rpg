@@ -30,7 +30,7 @@ class FarmFunctions extends MovementFunctions {
     createPen () {
         if (this.penInHand && this.talkZone){
             console.log('pen in hand');
-            this.animalPen = game.add.sprite(0, 0, 'animalPen');
+            this.animalPen = game.add.sprite(this.objectProperties.xPos*32, this.objectProperties.yPos*32, 'animalPen');
         }
     }
 
@@ -39,6 +39,7 @@ class FarmFunctions extends MovementFunctions {
         let textStyle = { font: "50px Arial", fill: "#fff", align: "center" };
         this.talkPromptText = game.add.text(properties.xPos*32+40, properties.yPos*32+80, "!", textStyle, this.farmGraphics);
         this.talkZone = true;
+        this.objectProperties = properties
     };
 
     endObjectCollision(properties) {

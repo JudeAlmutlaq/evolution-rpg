@@ -5,6 +5,8 @@ class State extends ShopFunctions {
     }
 
     preload() {
+        this.shopGUI = new GUI('./resources/app/gui/shop/shop.gui');
+        this.playerGUI = new GUI('./resources/app/gui/shop/shop.gui');
         game.load.tilemap('shop', 'images/grasslandTown/weaponShop.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('interiorTiles', 'images/interiorTiles.png');
 
@@ -59,6 +61,18 @@ class State extends ShopFunctions {
         enterKey.onUp.add(this.openShopMenu, this);
 
         game.input.mouse.mouseWheelCallback = this.scrollInventory.bind(this);
+
+        this.shopGUI.render();
+        this.fillShopInventory();
+        this.shopGUI.visible = false;
+        this.shopGUI.x = 255;
+        this.shopGUI.y = 45;
+
+        this.playerGUI.render();
+        this.fillPlayerInventory();
+        this.playerGUI.visible = false;
+        this.playerGUI.x = 755;
+        this.playerGUI.y = 45;
     };
 
     getPlayerPosition() {
@@ -72,17 +86,45 @@ class State extends ShopFunctions {
         game.state.start('Town', true, false, 20, 31);
 
     }
+
+    fillShopInventory() {
+        for (let index in world.weaponShopItems) {
+            let item = world.weaponShopItems[index];
+            let itemGraphic = this.shopGUI.groups.group1.addInstance();
+            itemGraphic.goldNumber.text = item.cost;
+            itemGraphic.itemName.text = item.displayName;
+            itemGraphic.stat.text = 'Attack: ' + item.attack;
+            itemGraphic.image.swap(item.spriteName);
+            itemGraphic.itemZone.onInputDown.add(this.itemClick, this, 0, index);
+        }
+    }
+
+    fillPlayerInventory() {
+        for (let index in world.inventory) {
+            let item = world.inventory[index];
+            let itemGraphic = this.playerGUI.groups.group1.addInstance();
+            itemGraphic.goldNumber.text = item.cost;
+            itemGraphic.itemName.text = item.displayName;
+            itemGraphic.stat.text = 'Attack: ' + item.attack;
+            itemGraphic.image.swap(item.spriteName);
+            // itemGraphic.itemZone.onInputDown.add(this.itemClick, this, 0, index);
+        }
+    }
+
+    itemClick (target, pointer, index) {
+        console.log('item is clicked');
+        this.shopGUI.groups.group1.removeInstance(index);
+    }
+
     openShopMenu (){
         if (this.talkPromptText){
-            if (this.shopGroup){
-               this.destroyShopMenu();
+            if (this.shopGUI.visible === false){
+                this.shopGUI.visible = true;
+                this.playerGUI.visible = true;
             }else {
-                this.inventoryScroll = 0;
-                this.shopScroll = 0;
-                this.createShopMenu();
+                this.shopGUI.visible = false;
+                this.playerGUI.visible = false;
             }
-
-
         }
     }
 
