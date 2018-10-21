@@ -10,7 +10,7 @@ class FarmFunctions extends MovementFunctions {
             this.openInventory();
             this.openInventory();
             this.penInHand = true;
-            this.createPen(this.mapInfo.layers[2].objects.properties);
+            this.createPen();
         }
     }
 
